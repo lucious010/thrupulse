@@ -74,12 +74,12 @@ function NodeCanvas() {
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 140) {
           ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y);
-          ctx.strokeStyle = `rgba(99,102,241,${0.12 * (1 - dist / 140)})`; ctx.lineWidth = 1; ctx.stroke();
+          ctx.strokeStyle = `rgba(225,29,72,${0.12 * (1 - dist / 140)})`; ctx.lineWidth = 1; ctx.stroke();
         }
       }
       nodes.forEach(n => {
         ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(99,102,241,0.35)"; ctx.fill();
+        ctx.fillStyle = "rgba(225,29,72,0.35)"; ctx.fill();
         n.x += n.vx; n.y += n.vy;
         if (n.x < 0 || n.x > W) n.vx *= -1;
         if (n.y < 0 || n.y > H) n.vy *= -1;
@@ -155,7 +155,7 @@ function Nav({ section, setSection, onBack, showBack }) {
       padding: "0 48px", height: "64px", transition: "all 0.3s ease",
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }} onClick={() => showBack ? onBack() : setSection("home")}>
-        <div style={{ width: "32px", height: "32px", borderRadius: "9px", background: "linear-gradient(135deg, #1e1b4b 0%, #4f46e5 100%)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 12px rgba(79,70,229,0.35)" }}>
+        <div style={{ width: "32px", height: "32px", borderRadius: "9px", background: "linear-gradient(135deg, #4c0519 0%, #e11d48 100%)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 12px rgba(225,29,72,0.35)" }}>
           <span style={{ color: "#fff", fontSize: "15px", fontWeight: "900", fontFamily: "Sora, sans-serif" }}>T</span>
         </div>
         <span style={{ fontFamily: "Sora, sans-serif", fontWeight: "800", fontSize: "15px", color: "#0f0c29", letterSpacing: "-0.03em" }}>
@@ -219,7 +219,7 @@ function RotatingWord() {
   return (
     <span style={{
       display: "inline-block",
-      background: "linear-gradient(90deg, #4f46e5, #818cf8)",
+      background: "linear-gradient(90deg, #e11d48, #fb7185)",
       WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
       opacity: fade ? 1 : 0, transform: fade ? "translateY(0)" : "translateY(6px)",
       transition: "opacity 0.3s, transform 0.3s",
@@ -524,7 +524,7 @@ function BlogPost({ item, onBack }) {
       }
       const linkMatch = p.match(/^\[(.*?)\]\((.*?)\)$/);
       if (linkMatch) {
-        return <a key={i} href={linkMatch[2]} target="_blank" rel="noreferrer" style={{ color: "#4f46e5", fontWeight: "600", textDecoration: "underline", textUnderlineOffset: "3px" }}>{linkMatch[1]}</a>;
+        return <a key={i} href={linkMatch[2]} target="_blank" rel="noreferrer" style={{ color: "#e11d48", fontWeight: "600", textDecoration: "underline", textUnderlineOffset: "3px" }}>{linkMatch[1]}</a>;
       }
       return p;
     });
@@ -570,10 +570,10 @@ function BlogPost({ item, onBack }) {
         {!loading && (
           <div style={{ marginTop: "48px", paddingTop: "32px", borderTop: "1px solid #f1f5f9" }}>
             <button onClick={onBack} style={{
-              background: "linear-gradient(135deg, #1e1b4b, #4f46e5)", color: "#fff",
+              background: "linear-gradient(135deg, #4c0519, #e11d48)", color: "#fff",
               fontFamily: "Sora, sans-serif", fontSize: "13px", fontWeight: "700",
               padding: "12px 24px", borderRadius: "10px", border: "none", cursor: "pointer",
-              boxShadow: "0 4px 16px rgba(79,70,229,0.25)",
+              boxShadow: "0 4px 16px rgba(225,29,72,0.25)",
             }}>← Back to News</button>
           </div>
         )}
@@ -591,17 +591,17 @@ function Home({ setSection, openPost }) {
       <div style={{
         position: "relative", minHeight: "100vh",
         display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-        overflow: "hidden", background: "radial-gradient(ellipse 80% 60% at 50% 0%, #eef2ff 0%, #fff 65%)",
+        overflow: "hidden", background: "radial-gradient(ellipse 80% 60% at 50% 0%, #fff1f2 0%, #fff 65%)",
         paddingTop: "80px",
       }}>
         <NodeCanvas />
-        <div style={{ position: "absolute", top: "12%", right: "8%", width: "320px", height: "320px", borderRadius: "50%", background: "radial-gradient(circle, rgba(79,70,229,0.08), transparent 70%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: "15%", left: "5%", width: "200px", height: "200px", borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.06), transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "12%", right: "8%", width: "320px", height: "320px", borderRadius: "50%", background: "radial-gradient(circle, rgba(225,29,72,0.08), transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: "15%", left: "5%", width: "200px", height: "200px", borderRadius: "50%", background: "radial-gradient(circle, rgba(225,29,72,0.06), transparent 70%)", pointerEvents: "none" }} />
 
         <div style={{ position: "relative", textAlign: "center", maxWidth: "800px", padding: "0 32px" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(79,70,229,0.07)", border: "1px solid rgba(79,70,229,0.2)", borderRadius: "100px", padding: "6px 16px", marginBottom: "32px", animation: "fadeDown 0.6s ease both" }}>
-            <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#4f46e5", display: "inline-block", animation: "pulse 2s infinite" }} />
-            <span style={{ fontFamily: "Sora, sans-serif", fontSize: "12px", color: "#4f46e5", fontWeight: "600" }}>Testnet Live · Unto Labs · $14.4M Raised</span>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(225,29,72,0.07)", border: "1px solid rgba(79,70,229,0.2)", borderRadius: "100px", padding: "6px 16px", marginBottom: "32px", animation: "fadeDown 0.6s ease both" }}>
+            <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#e11d48", display: "inline-block", animation: "pulse 2s infinite" }} />
+            <span style={{ fontFamily: "Sora, sans-serif", fontSize: "12px", color: "#e11d48", fontWeight: "600" }}>Testnet Live · Unto Labs · $14.4M Raised</span>
           </div>
           <h1 style={{ fontFamily: "Sora, sans-serif", fontWeight: "800", fontSize: "clamp(44px, 7vw, 80px)", lineHeight: "1.05", color: "#0f0c29", letterSpacing: "-0.04em", margin: "0 0 20px", animation: "fadeDown 0.7s 0.1s ease both" }}>
             Built for<br /><RotatingWord />
@@ -610,12 +610,12 @@ function Home({ setSection, openPost }) {
             Thru is a next-generation L1 blockchain — bigger accounts, bigger blocks, zero compromises. Powered by ThruVM and RISC-V.
           </p>
           <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap", animation: "fadeDown 0.7s 0.3s ease both" }}>
-            <button onClick={() => setSection("protocols")} style={{ background: "linear-gradient(135deg, #1e1b4b, #4f46e5)", color: "#fff", fontFamily: "Sora, sans-serif", fontSize: "14px", fontWeight: "700", padding: "14px 30px", borderRadius: "12px", border: "none", cursor: "pointer", boxShadow: "0 4px 20px rgba(79,70,229,0.35)", transition: "transform 0.15s, box-shadow 0.15s" }}
+            <button onClick={() => setSection("protocols")} style={{ background: "linear-gradient(135deg, #4c0519, #e11d48)", color: "#fff", fontFamily: "Sora, sans-serif", fontSize: "14px", fontWeight: "700", padding: "14px 30px", borderRadius: "12px", border: "none", cursor: "pointer", boxShadow: "0 4px 20px rgba(225,29,72,0.35)", transition: "transform 0.15s, box-shadow 0.15s" }}
               onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 28px rgba(79,70,229,0.45)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 20px rgba(79,70,229,0.35)"; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 20px rgba(225,29,72,0.35)"; }}
             >Explore Ecosystem →</button>
             <button onClick={() => setSection("news")} style={{ background: "#fff", color: "#0f0c29", fontFamily: "Sora, sans-serif", fontSize: "14px", fontWeight: "700", padding: "14px 30px", borderRadius: "12px", border: "1.5px solid #e2e8f0", cursor: "pointer", transition: "border-color 0.15s" }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = "#c7d2fe"; }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "#fda4af"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = "#e2e8f0"; }}
             >Latest News</button>
           </div>
@@ -640,7 +640,7 @@ function Home({ setSection, openPost }) {
                 <div style={{ fontFamily: "Sora, sans-serif", fontSize: "36px", fontWeight: "800", color: "#fff", letterSpacing: "-0.04em", lineHeight: 1 }}>
                   <Counter end={s.value} prefix={s.prefix} suffix={s.suffix} decimals={s.dec} />
                 </div>
-                <div style={{ fontFamily: "Sora, sans-serif", fontSize: "13px", fontWeight: "700", color: "#818cf8", marginTop: "8px" }}>{s.label}</div>
+                <div style={{ fontFamily: "Sora, sans-serif", fontSize: "13px", fontWeight: "700", color: "#fb7185", marginTop: "8px" }}>{s.label}</div>
                 <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", color: "#475569", marginTop: "3px" }}>{s.sub}</div>
               </div>
             </Reveal>
@@ -653,7 +653,7 @@ function Home({ setSection, openPost }) {
         <div style={{ maxWidth: "1040px", margin: "0 auto" }}>
           <Reveal>
             <div style={{ textAlign: "center", marginBottom: "64px" }}>
-              <span style={{ fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "700", color: "#4f46e5", letterSpacing: "0.14em", textTransform: "uppercase" }}>What makes Thru different</span>
+              <span style={{ fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "700", color: "#e11d48", letterSpacing: "0.14em", textTransform: "uppercase" }}>What makes Thru different</span>
               <h2 style={{ fontFamily: "Sora, sans-serif", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: "800", color: "#0f0c29", letterSpacing: "-0.03em", margin: "12px 0 0" }}>The end of the beginning<br />for blockchain.</h2>
             </div>
           </Reveal>
@@ -666,10 +666,10 @@ function Home({ setSection, openPost }) {
             ].map((f, i) => (
               <Reveal key={f.n} delay={i * 80}>
                 <div style={{ background: "#fafafa", borderRadius: "18px", padding: "32px 28px", border: "1.5px solid #f1f5f9", position: "relative", transition: "border-color 0.2s, box-shadow 0.2s, transform 0.2s" }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = "#c7d2fe"; e.currentTarget.style.boxShadow = "0 8px 32px rgba(79,70,229,0.1)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = "#fda4af"; e.currentTarget.style.boxShadow = "0 8px 32px rgba(79,70,229,0.1)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = "#f1f5f9"; e.currentTarget.style.boxShadow = ""; e.currentTarget.style.transform = ""; }}
                 >
-                  <span style={{ position: "absolute", top: "16px", right: "20px", fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "800", color: "#e0e7ff" }}>{f.n}</span>
+                  <span style={{ position: "absolute", top: "16px", right: "20px", fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "800", color: "#fecdd3" }}>{f.n}</span>
                   <h3 style={{ fontFamily: "Sora, sans-serif", fontSize: "16px", fontWeight: "800", color: "#0f0c29", margin: "0 0 10px" }}>{f.title}</h3>
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "#64748b", lineHeight: "1.65", margin: 0 }}>{f.body}</p>
                 </div>
@@ -680,12 +680,12 @@ function Home({ setSection, openPost }) {
       </div>
 
       {/* MANIFESTO */}
-      <div style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%)", padding: "80px 40px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 20% 50%, rgba(99,102,241,0.15), transparent 50%), radial-gradient(circle at 80% 50%, rgba(129,140,248,0.1), transparent 50%)", pointerEvents: "none" }} />
+      <div style={{ background: "linear-gradient(135deg, #4c0519 0%, #881337 50%, #4c0519 100%)", padding: "80px 40px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 20% 50%, rgba(225,29,72,0.15), transparent 50%), radial-gradient(circle at 80% 50%, rgba(129,140,248,0.1), transparent 50%)", pointerEvents: "none" }} />
         <Reveal>
           <p style={{ fontFamily: "Sora, sans-serif", fontSize: "clamp(20px, 3.5vw, 32px)", fontWeight: "800", color: "#fff", lineHeight: "1.5", maxWidth: "720px", margin: "0 auto 32px", letterSpacing: "-0.02em" }}>
             "The crypto dark ages were built on isolation, distrust, and speculation. We're building for{" "}
-            <span style={{ color: "#818cf8" }}>trust, utility, and scale.</span>"
+            <span style={{ color: "#fb7185" }}>trust, utility, and scale.</span>"
           </p>
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#6366f1", letterSpacing: "0.08em", textTransform: "uppercase" }}>— Unto Labs, Introducing Thru</p>
         </Reveal>
@@ -697,7 +697,7 @@ function Home({ setSection, openPost }) {
           <Reveal>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "40px", flexWrap: "wrap", gap: "16px" }}>
               <div>
-                <span style={{ fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "700", color: "#4f46e5", letterSpacing: "0.14em", textTransform: "uppercase" }}>Ecosystem</span>
+                <span style={{ fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "700", color: "#e11d48", letterSpacing: "0.14em", textTransform: "uppercase" }}>Ecosystem</span>
                 <h2 style={{ fontFamily: "Sora, sans-serif", fontSize: "28px", fontWeight: "800", color: "#0f0c29", letterSpacing: "-0.03em", margin: "8px 0 0" }}>Live protocols</h2>
               </div>
               <button onClick={() => setSection("protocols")} style={{ background: "transparent", border: "1.5px solid #e2e8f0", color: "#0f0c29", fontFamily: "Sora, sans-serif", fontSize: "13px", fontWeight: "700", padding: "9px 20px", borderRadius: "10px", cursor: "pointer" }}>View all →</button>
@@ -709,27 +709,27 @@ function Home({ setSection, openPost }) {
               return (
                 <Reveal key={dapp.name} delay={i * 100}>
                   <a href={dapp.url} target="_blank" rel="noreferrer" style={{ textDecoration: "none", display: "block" }}>
-                    <div style={{ background: "linear-gradient(135deg, #fafafa 0%, #f0f4ff 100%)", border: "1.5px solid #e0e7ff", borderRadius: "20px", padding: "32px", transition: "all 0.2s", position: "relative", overflow: "hidden" }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = "#a5b4fc"; e.currentTarget.style.background = "linear-gradient(135deg, #fff 0%, #eef2ff 100%)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(79,70,229,0.13)"; e.currentTarget.style.transform = "translateY(-4px)"; }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = "#e0e7ff"; e.currentTarget.style.background = "linear-gradient(135deg, #fafafa 0%, #f0f4ff 100%)"; e.currentTarget.style.boxShadow = ""; e.currentTarget.style.transform = ""; }}
+                    <div style={{ background: "linear-gradient(135deg, #fafafa 0%, #f0f4ff 100%)", border: "1.5px solid #fecdd3", borderRadius: "20px", padding: "32px", transition: "all 0.2s", position: "relative", overflow: "hidden" }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = "#fca5a5"; e.currentTarget.style.background = "linear-gradient(135deg, #fff 0%, #fff1f2 100%)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(225,29,72,0.13)"; e.currentTarget.style.transform = "translateY(-4px)"; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = "#fecdd3"; e.currentTarget.style.background = "linear-gradient(135deg, #fafafa 0%, #f0f4ff 100%)"; e.currentTarget.style.boxShadow = ""; e.currentTarget.style.transform = ""; }}
                     >
-                      <div style={{ position: "absolute", top: "-30px", right: "-30px", width: "120px", height: "120px", borderRadius: "50%", background: "rgba(99,102,241,0.06)", pointerEvents: "none" }} />
+                      <div style={{ position: "absolute", top: "-30px", right: "-30px", width: "120px", height: "120px", borderRadius: "50%", background: "rgba(225,29,72,0.06)", pointerEvents: "none" }} />
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
-                        <div style={{ width: "52px", height: "52px", borderRadius: "14px", background: "linear-gradient(135deg, #1e1b4b, #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "24px", boxShadow: "0 4px 14px rgba(79,70,229,0.3)" }}>
+                        <div style={{ width: "52px", height: "52px", borderRadius: "14px", background: "linear-gradient(135deg, #4c0519, #e11d48)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "24px", boxShadow: "0 4px 14px rgba(225,29,72,0.3)" }}>
                           {dapp.logo ? dapp.logo : <span style={{ fontFamily: "Sora, sans-serif", fontWeight: "800", fontSize: "16px", color: "#fff", letterSpacing: "-0.02em" }}>KEA</span>}
                         </div>
                         <span style={{ fontFamily: "Sora, sans-serif", fontSize: "10px", fontWeight: "700", background: sc.bg, color: sc.text, padding: "4px 12px", borderRadius: "100px" }}>{dapp.status}</span>
                       </div>
                       <h3 style={{ fontFamily: "Sora, sans-serif", fontSize: "20px", fontWeight: "800", color: "#0f0c29", margin: "0 0 6px", letterSpacing: "-0.02em" }}>{dapp.name}</h3>
-                      <span style={{ fontFamily: "Sora, sans-serif", fontSize: "10px", fontWeight: "700", color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.08em" }}>{dapp.category}</span>
+                      <span style={{ fontFamily: "Sora, sans-serif", fontSize: "10px", fontWeight: "700", color: "#fb7185", textTransform: "uppercase", letterSpacing: "0.08em" }}>{dapp.category}</span>
                       <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "#64748b", lineHeight: "1.65", margin: "12px 0 20px" }}>{dapp.description}</p>
                       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "20px" }}>
                         {dapp.highlights.map(h => (
-                          <span key={h} style={{ fontFamily: "Sora, sans-serif", fontSize: "10px", fontWeight: "600", background: "rgba(79,70,229,0.08)", color: "#4f46e5", padding: "4px 10px", borderRadius: "6px" }}>{h}</span>
+                          <span key={h} style={{ fontFamily: "Sora, sans-serif", fontSize: "10px", fontWeight: "600", background: "rgba(225,29,72,0.08)", color: "#e11d48", padding: "4px 10px", borderRadius: "6px" }}>{h}</span>
                         ))}
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                        <span style={{ fontFamily: "Sora, sans-serif", fontSize: "12px", fontWeight: "700", color: "#4f46e5" }}>Open app →</span>
+                        <span style={{ fontFamily: "Sora, sans-serif", fontSize: "12px", fontWeight: "700", color: "#e11d48" }}>Open app →</span>
                       </div>
                     </div>
                   </a>
@@ -746,7 +746,7 @@ function Home({ setSection, openPost }) {
           <Reveal>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "40px", flexWrap: "wrap", gap: "16px" }}>
               <div>
-                <span style={{ fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "700", color: "#4f46e5", letterSpacing: "0.14em", textTransform: "uppercase" }}>Latest coverage</span>
+                <span style={{ fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "700", color: "#e11d48", letterSpacing: "0.14em", textTransform: "uppercase" }}>Latest coverage</span>
                 <h2 style={{ fontFamily: "Sora, sans-serif", fontSize: "28px", fontWeight: "800", color: "#0f0c29", letterSpacing: "-0.03em", margin: "8px 0 0" }}>In the news</h2>
               </div>
               <button onClick={() => setSection("news")} style={{ background: "transparent", border: "1.5px solid #e2e8f0", color: "#0f0c29", fontFamily: "Sora, sans-serif", fontSize: "13px", fontWeight: "700", padding: "9px 20px", borderRadius: "10px", cursor: "pointer" }}>All news →</button>
@@ -759,7 +759,7 @@ function Home({ setSection, openPost }) {
                 <Reveal key={item.id} delay={i * 70}>
                   <div style={{ background: "#fafafa", border: "1.5px solid #f1f5f9", borderRadius: "16px", padding: "24px", cursor: "pointer", transition: "all 0.2s" }}
                     onClick={() => item.type === "blog" ? openPost(item) : window.open(item.url, "_blank")}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = "#c7d2fe"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.boxShadow = "0 8px 28px rgba(79,70,229,0.09)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = "#fda4af"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.boxShadow = "0 8px 28px rgba(225,29,72,0.09)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
                     onMouseLeave={e => { e.currentTarget.style.borderColor = "#f1f5f9"; e.currentTarget.style.background = "#fafafa"; e.currentTarget.style.boxShadow = ""; e.currentTarget.style.transform = ""; }}
                   >
                     <div style={{ marginBottom: "12px" }}>
@@ -780,10 +780,10 @@ function Home({ setSection, openPost }) {
       {/* BUILD CTA */}
       <div style={{ padding: "0 40px 100px", background: "#fff" }}>
         <Reveal>
-          <div style={{ maxWidth: "680px", margin: "0 auto", textAlign: "center", background: "linear-gradient(135deg, #f8faff, #eef2ff)", border: "1.5px solid #e0e7ff", borderRadius: "24px", padding: "56px 40px", boxShadow: "0 4px 40px rgba(79,70,229,0.07)" }}>
+          <div style={{ maxWidth: "680px", margin: "0 auto", textAlign: "center", background: "linear-gradient(135deg, #f8faff, #fff1f2)", border: "1.5px solid #fecdd3", borderRadius: "24px", padding: "56px 40px", boxShadow: "0 4px 40px rgba(225,29,72,0.07)" }}>
             <h2 style={{ fontFamily: "Sora, sans-serif", fontSize: "26px", fontWeight: "800", color: "#0f0c29", letterSpacing: "-0.03em", margin: "0 0 12px" }}>Ready to build on Thru?</h2>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "15px", color: "#64748b", lineHeight: "1.65", margin: "0 0 28px" }}>Deploy smart contracts with your existing Rust or C++ toolchain. No custom compilers. No domain-specific languages. Just ship.</p>
-            <a href="https://docs.thru.org/" target="_blank" rel="noreferrer" style={{ display: "inline-block", background: "linear-gradient(135deg, #1e1b4b, #4f46e5)", color: "#fff", fontFamily: "Sora, sans-serif", fontSize: "14px", fontWeight: "700", padding: "14px 32px", borderRadius: "12px", textDecoration: "none", boxShadow: "0 4px 20px rgba(79,70,229,0.3)" }}>Read the Docs →</a>
+            <a href="https://docs.thru.org/" target="_blank" rel="noreferrer" style={{ display: "inline-block", background: "linear-gradient(135deg, #4c0519, #e11d48)", color: "#fff", fontFamily: "Sora, sans-serif", fontSize: "14px", fontWeight: "700", padding: "14px 32px", borderRadius: "12px", textDecoration: "none", boxShadow: "0 4px 20px rgba(225,29,72,0.3)" }}>Read the Docs →</a>
           </div>
         </Reveal>
       </div>
@@ -799,7 +799,7 @@ function Protocols() {
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "60px 40px" }}>
         <Reveal>
           <div style={{ marginBottom: "56px" }}>
-            <span style={{ fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "700", color: "#4f46e5", letterSpacing: "0.14em", textTransform: "uppercase" }}>Ecosystem</span>
+            <span style={{ fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "700", color: "#e11d48", letterSpacing: "0.14em", textTransform: "uppercase" }}>Ecosystem</span>
             <h2 style={{ fontFamily: "Sora, sans-serif", fontSize: "36px", fontWeight: "800", color: "#0f0c29", letterSpacing: "-0.03em", margin: "10px 0 8px" }}>Protocol Explorer</h2>
             <p style={{ fontFamily: "'DM Sans', sans-serif", color: "#64748b", fontSize: "15px", margin: 0 }}>Native apps and protocols live on Thru right now.</p>
           </div>
@@ -810,23 +810,23 @@ function Protocols() {
             return (
               <Reveal key={dapp.name} delay={i * 80}>
                 <a href={dapp.url} target="_blank" rel="noreferrer" style={{ textDecoration: "none", display: "block" }}>
-                  <div style={{ background: "linear-gradient(135deg, #fafafa, #f4f6ff)", border: "1.5px solid #e0e7ff", borderRadius: "20px", padding: "36px", display: "flex", gap: "28px", alignItems: "flex-start", transition: "all 0.2s", position: "relative", overflow: "hidden" }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = "#a5b4fc"; e.currentTarget.style.background = "linear-gradient(135deg, #fff, #eef2ff)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(79,70,229,0.12)"; e.currentTarget.style.transform = "translateX(6px)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = "#e0e7ff"; e.currentTarget.style.background = "linear-gradient(135deg, #fafafa, #f4f6ff)"; e.currentTarget.style.boxShadow = ""; e.currentTarget.style.transform = ""; }}
+                  <div style={{ background: "linear-gradient(135deg, #fafafa, #f4f6ff)", border: "1.5px solid #fecdd3", borderRadius: "20px", padding: "36px", display: "flex", gap: "28px", alignItems: "flex-start", transition: "all 0.2s", position: "relative", overflow: "hidden" }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = "#fca5a5"; e.currentTarget.style.background = "linear-gradient(135deg, #fff, #fff1f2)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(225,29,72,0.12)"; e.currentTarget.style.transform = "translateX(6px)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = "#fecdd3"; e.currentTarget.style.background = "linear-gradient(135deg, #fafafa, #f4f6ff)"; e.currentTarget.style.boxShadow = ""; e.currentTarget.style.transform = ""; }}
                   >
-                    <div style={{ width: "60px", height: "60px", borderRadius: "16px", flexShrink: 0, background: "linear-gradient(135deg, #1e1b4b, #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "28px", boxShadow: "0 4px 16px rgba(79,70,229,0.3)" }}>
+                    <div style={{ width: "60px", height: "60px", borderRadius: "16px", flexShrink: 0, background: "linear-gradient(135deg, #4c0519, #e11d48)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "28px", boxShadow: "0 4px 16px rgba(225,29,72,0.3)" }}>
                       {dapp.logo ? dapp.logo : <span style={{ fontFamily: "Sora, sans-serif", fontWeight: "800", fontSize: "18px", color: "#fff" }}>KEA</span>}
                     </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px", flexWrap: "wrap" }}>
                         <h3 style={{ fontFamily: "Sora, sans-serif", fontSize: "20px", fontWeight: "800", color: "#0f0c29", margin: 0 }}>{dapp.name}</h3>
                         <span style={{ fontFamily: "Sora, sans-serif", fontSize: "10px", fontWeight: "700", background: sc.bg, color: sc.text, padding: "3px 12px", borderRadius: "100px" }}>{dapp.status}</span>
-                        <span style={{ fontFamily: "Sora, sans-serif", fontSize: "10px", fontWeight: "700", color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.08em" }}>{dapp.category}</span>
+                        <span style={{ fontFamily: "Sora, sans-serif", fontSize: "10px", fontWeight: "700", color: "#fb7185", textTransform: "uppercase", letterSpacing: "0.08em" }}>{dapp.category}</span>
                       </div>
                       <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "15px", color: "#475569", lineHeight: "1.65", margin: "0 0 16px" }}>{dapp.description}</p>
                       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                         {dapp.highlights.map(h => (
-                          <span key={h} style={{ fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "600", background: "rgba(79,70,229,0.08)", color: "#4f46e5", padding: "5px 12px", borderRadius: "8px" }}>{h}</span>
+                          <span key={h} style={{ fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "600", background: "rgba(225,29,72,0.08)", color: "#e11d48", padding: "5px 12px", borderRadius: "8px" }}>{h}</span>
                         ))}
                       </div>
                     </div>
@@ -837,10 +837,10 @@ function Protocols() {
           })}
         </div>
         <Reveal delay={200}>
-          <div style={{ marginTop: "24px", background: "linear-gradient(135deg, #eef2ff, #f0f9ff)", border: "1.5px dashed #c7d2fe", borderRadius: "20px", padding: "40px", textAlign: "center" }}>
+          <div style={{ marginTop: "24px", background: "linear-gradient(135deg, #fff1f2, #f0f9ff)", border: "1.5px dashed #fda4af", borderRadius: "20px", padding: "40px", textAlign: "center" }}>
             <h3 style={{ fontFamily: "Sora, sans-serif", fontSize: "17px", fontWeight: "800", color: "#0f0c29", margin: "0 0 8px" }}>More protocols coming</h3>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "#64748b", margin: "0 0 16px" }}>The Thru ecosystem is early. As new protocols launch we'll add them here.</p>
-            <a href="https://x.com/Thru_pulse" target="_blank" rel="noreferrer" style={{ fontFamily: "Sora, sans-serif", fontSize: "12px", fontWeight: "700", color: "#4f46e5", textDecoration: "none" }}>Follow @thruPulse for updates →</a>
+            <a href="https://x.com/Thru_pulse" target="_blank" rel="noreferrer" style={{ fontFamily: "Sora, sans-serif", fontSize: "12px", fontWeight: "700", color: "#e11d48", textDecoration: "none" }}>Follow @thruPulse for updates →</a>
           </div>
         </Reveal>
       </div>
@@ -859,7 +859,7 @@ function News({ openPost }) {
       <div style={{ maxWidth: "860px", margin: "0 auto", padding: "60px 40px" }}>
         <Reveal>
           <div style={{ marginBottom: "48px" }}>
-            <span style={{ fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "700", color: "#4f46e5", letterSpacing: "0.14em", textTransform: "uppercase" }}>Coverage</span>
+            <span style={{ fontFamily: "Sora, sans-serif", fontSize: "11px", fontWeight: "700", color: "#e11d48", letterSpacing: "0.14em", textTransform: "uppercase" }}>Coverage</span>
             <h2 style={{ fontFamily: "Sora, sans-serif", fontSize: "36px", fontWeight: "800", color: "#0f0c29", letterSpacing: "-0.03em", margin: "10px 0 8px" }}>News & Updates</h2>
             <p style={{ fontFamily: "'DM Sans', sans-serif", color: "#64748b", fontSize: "15px", margin: 0 }}>Everything happening in the Thru ecosystem. Thru Blog posts open as full articles.</p>
           </div>
@@ -881,7 +881,7 @@ function News({ openPost }) {
               <Reveal key={item.id} delay={i * 60}>
                 <div style={{ background: "#fafafa", border: "1.5px solid #f1f5f9", borderRadius: "16px", padding: "24px 28px", display: "flex", gap: "20px", alignItems: "flex-start", transition: "all 0.2s", cursor: "pointer" }}
                   onClick={() => item.type === "blog" ? openPost(item) : window.open(item.url, "_blank")}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = "#c7d2fe"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(79,70,229,0.08)"; e.currentTarget.style.transform = "translateX(4px)"; }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = "#fda4af"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(225,29,72,0.08)"; e.currentTarget.style.transform = "translateX(4px)"; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = "#f1f5f9"; e.currentTarget.style.background = "#fafafa"; e.currentTarget.style.boxShadow = ""; e.currentTarget.style.transform = ""; }}
                 >
                   <div style={{ flex: 1 }}>
@@ -893,7 +893,7 @@ function News({ openPost }) {
                     <h3 style={{ fontFamily: "Sora, sans-serif", fontSize: "16px", fontWeight: "700", color: "#0f0c29", margin: "0 0 6px", lineHeight: "1.4" }}>{item.title}</h3>
                     <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#64748b", lineHeight: "1.65", margin: 0 }}>{item.excerpt}</p>
                   </div>
-                  <span style={{ color: "#c7d2fe", fontSize: "20px", flexShrink: 0, marginTop: "2px" }}>→</span>
+                  <span style={{ color: "#fda4af", fontSize: "20px", flexShrink: 0, marginTop: "2px" }}>→</span>
                 </div>
               </Reveal>
             );
