@@ -77,7 +77,7 @@ export function Swap({ setSection }) {
         };
         setBalances(updated);
         localStorage.setItem("thrupulse_balances", JSON.stringify(updated));
-        setSyncMessage(`⚡ Synced ${data.balance.toLocaleString()} THRU directly from on-chain RPC!`);
+        setSyncMessage(`Synced ${data.balance.toLocaleString()} THRU directly from on-chain RPC!`);
       } else {
         setSyncMessage(`⚠️ On-chain sync: ${data.error || "Node offline"}`);
       }
@@ -395,126 +395,136 @@ export function Swap({ setSection }) {
         background: "#ffffff",
         border: "1px solid #c8d0da",
         borderRadius: "18px",
-        padding: "16px 24px",
+        padding: "20px 24px",
         marginBottom: "32px",
         display: "flex",
         flexDirection: "column",
-        gap: "12px"
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        gap: "16px"
       }}>
+        {/* Balances Row - Centered */}
         <div style={{
           display: "flex",
           flexWrap: "wrap",
           alignItems: "center",
-          justifyContent: "space-between",
-          gap: "16px"
+          justifyContent: "center",
+          gap: "10px"
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-            <span style={{ fontSize: "13px", fontWeight: "600", color: "#1a1a1a", letterSpacing: "0.02em" }}>
-              Test Wallet Balances:
-            </span>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-              {TOKENS.map(t => (
-                <span key={t.symbol} style={{
-                  background: "#f7f9fa",
-                  border: "1px solid #e4e9ef",
-                  borderRadius: "8px",
-                  padding: "4px 10px",
-                  fontSize: "12px",
-                  color: "#1a1a1a"
-                }}>
-                  <strong style={{ color: t.color }}>{t.symbol}</strong>: {(balances[t.symbol] || 0).toLocaleString()}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-            {/* Sync On-Chain Button */}
-            <button
-              onClick={handleSyncOnchain}
-              disabled={syncingOnchain}
-              title="Queries the live Thru node RPC (thru getbalance) to sync your real on-chain THRU funds"
-              style={{
-                background: "#f0f3f6",
-                border: "1px solid #c8d0da",
+          <span style={{ fontSize: "13px", fontWeight: "600", color: "#1a1a1a", letterSpacing: "0.02em" }}>
+            Test Wallet Balances:
+          </span>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "8px" }}>
+            {TOKENS.map(t => (
+              <span key={t.symbol} style={{
+                background: "#f7f9fa",
+                border: "1px solid #e4e9ef",
                 borderRadius: "8px",
-                padding: "6px 12px",
-                fontSize: "11px",
-                fontWeight: "600",
-                color: "#1a1a1a",
-                cursor: syncingOnchain ? "not-allowed" : "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "4px",
-                transition: "all 0.15s"
-              }}
-              onMouseEnter={e => { if (!syncingOnchain) e.currentTarget.style.borderColor = "#C0392B"; }}
-              onMouseLeave={e => { if (!syncingOnchain) e.currentTarget.style.borderColor = "#c8d0da"; }}
-            >
-              <span>{syncingOnchain ? "Syncing..." : "Sync On-Chain (THRU) ⚡"}</span>
-            </button>
-
-            {/* Claim from Treasury Button */}
-            {setSection && (
-              <button
-                onClick={() => setSection("faucet")}
-                title="Claim THRU, tSOL, tUSD, tETH, or tBTC from the Community Treasury"
-                style={{
-                  background: "#1a1a1a",
-                  border: "none",
-                  borderRadius: "8px",
-                  padding: "6px 12px",
-                  fontSize: "11px",
-                  fontWeight: "600",
-                  color: "#ffffff",
-                  cursor: "pointer",
-                  transition: "opacity 0.15s"
-                }}
-                onMouseEnter={e => { e.currentTarget.style.opacity = "0.9"; }}
-                onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
-              >
-                + Claim from Treasury 💧
-              </button>
-            )}
-
-            {/* Reset Balances Button */}
-            <button
-              onClick={handleResetBalances}
-              style={{
-                background: "none",
-                border: "1px solid #c8d0da",
-                borderRadius: "8px",
-                padding: "5px 10px",
-                fontSize: "11px",
-                color: "#7a8a9a",
-                cursor: "pointer",
-                transition: "all 0.15s"
-              }}
-              onMouseEnter={e => { e.currentTarget.style.color = "#1a1a1a"; e.currentTarget.style.borderColor = "#1a1a1a"; }}
-              onMouseLeave={e => { e.currentTarget.style.color = "#7a8a9a"; e.currentTarget.style.borderColor = "#c8d0da"; }}
-            >
-              Reset ↻
-            </button>
+                padding: "4px 10px",
+                fontSize: "12px",
+                color: "#1a1a1a"
+              }}>
+                <strong style={{ color: t.color }}>{t.symbol}</strong>: {(balances[t.symbol] || 0).toLocaleString()}
+              </span>
+            ))}
           </div>
         </div>
 
-        {/* Sync Status Banner */}
+        {/* Buttons Row - Centered */}
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "10px",
+          flexWrap: "wrap"
+        }}>
+          {/* Sync On-Chain Button */}
+          <button
+            onClick={handleSyncOnchain}
+            disabled={syncingOnchain}
+            title="Queries the live Thru node RPC (thru getbalance) to sync your real on-chain THRU funds"
+            style={{
+              background: "#f0f3f6",
+              border: "1px solid #c8d0da",
+              borderRadius: "8px",
+              padding: "6px 14px",
+              fontSize: "12px",
+              fontWeight: "600",
+              color: "#1a1a1a",
+              cursor: syncingOnchain ? "not-allowed" : "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "4px",
+              transition: "all 0.15s"
+            }}
+            onMouseEnter={e => { if (!syncingOnchain) e.currentTarget.style.borderColor = "#C0392B"; }}
+            onMouseLeave={e => { if (!syncingOnchain) e.currentTarget.style.borderColor = "#c8d0da"; }}
+          >
+            <span>{syncingOnchain ? "Syncing..." : "Sync On-Chain (THRU)"}</span>
+          </button>
+
+          {/* Claim from Treasury Button */}
+          {setSection && (
+            <button
+              onClick={() => setSection("faucet")}
+              title="Claim THRU, tSOL, tUSD, tETH, or tBTC from the Community Treasury"
+              style={{
+                background: "#1a1a1a",
+                border: "none",
+                borderRadius: "8px",
+                padding: "6px 14px",
+                fontSize: "12px",
+                fontWeight: "600",
+                color: "#ffffff",
+                cursor: "pointer",
+                transition: "opacity 0.15s"
+              }}
+              onMouseEnter={e => { e.currentTarget.style.opacity = "0.9"; }}
+              onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
+            >
+              + Claim from Treasury
+            </button>
+          )}
+
+          {/* Reset Balances Button */}
+          <button
+            onClick={handleResetBalances}
+            style={{
+              background: "none",
+              border: "1px solid #c8d0da",
+              borderRadius: "8px",
+              padding: "5px 12px",
+              fontSize: "12px",
+              color: "#7a8a9a",
+              cursor: "pointer",
+              transition: "all 0.15s"
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = "#1a1a1a"; e.currentTarget.style.borderColor = "#1a1a1a"; }}
+            onMouseLeave={e => { e.currentTarget.style.color = "#7a8a9a"; e.currentTarget.style.borderColor = "#c8d0da"; }}
+          >
+            Reset ↻
+          </button>
+        </div>
+
+        {/* Sync Status Banner - Centered */}
         {syncMessage && (
           <div style={{
             background: "#f4fcf6",
             border: "1px solid #c3e6cb",
             borderRadius: "8px",
-            padding: "8px 14px",
+            padding: "8px 16px",
             fontSize: "12px",
             color: "#27ae60",
-            display: "flex",
+            display: "inline-flex",
             alignItems: "center",
-            justifyContent: "space-between"
+            justifyContent: "center",
+            gap: "12px"
           }}>
             <span>{syncMessage}</span>
             <button
               onClick={() => setSyncMessage(null)}
-              style={{ background: "none", border: "none", color: "#7a8a9a", cursor: "pointer", fontSize: "14px" }}
+              style={{ background: "none", border: "none", color: "#7a8a9a", cursor: "pointer", fontSize: "14px", lineHeight: "1" }}
             >
               ×
             </button>
