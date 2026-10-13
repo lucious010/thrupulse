@@ -194,7 +194,7 @@ export function Swap({ setSection }) {
         hash: fakeTxHash,
         time: "< 0.35s (RISC-V ThruVM Finality)"
       });
-      setTimeout(() => setSwapSuccess(null), 8000);
+      setTimeout(() => setSwapSuccess(null), 3500);
 
       setFromAmount("");
       setToAmount("");
@@ -291,7 +291,7 @@ export function Swap({ setSection }) {
         lp: `${mintedLP} ${currentPool.id} LP Tokens`,
         hash: "tx_thruvm_lp_" + Math.random().toString(36).substring(2, 12)
       });
-      setTimeout(() => setLiqSuccess(null), 8000);
+      setTimeout(() => setLiqSuccess(null), 3500);
 
       setLiqAmountA("");
       setLiqAmountB("");
@@ -370,6 +370,10 @@ export function Swap({ setSection }) {
             <div style={{ fontFamily: "monospace", fontSize: "11px", color: "#7a8a9a", paddingLeft: "26px", wordBreak: "break-all" }}>
               Tx: {swapSuccess.hash}
             </div>
+            {/* Countdown progress bar */}
+            <div style={{ height: "3px", background: "#bbf7d0", width: "100%", borderRadius: "2px", overflow: "hidden", marginTop: "4px" }}>
+              <div style={{ height: "100%", background: "#16a34a", animation: "toastProgress 3.5s linear forwards" }} />
+            </div>
           </div>
         )}
 
@@ -405,6 +409,10 @@ export function Swap({ setSection }) {
             </div>
             <div style={{ fontFamily: "monospace", fontSize: "11px", color: "#7a8a9a", paddingLeft: "26px", wordBreak: "break-all" }}>
               Tx: {liqSuccess.hash}
+            </div>
+            {/* Countdown progress bar */}
+            <div style={{ height: "3px", background: "#bbf7d0", width: "100%", borderRadius: "2px", overflow: "hidden", marginTop: "4px" }}>
+              <div style={{ height: "100%", background: "#16a34a", animation: "toastProgress 3.5s linear forwards" }} />
             </div>
           </div>
         )}
