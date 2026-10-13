@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { TokenIcon } from "./TokenIcon.jsx";
 
 const TOKENS_CONFIG = {
   THRU: {
@@ -199,8 +200,13 @@ export function Faucet({ setSection }) {
         </div>
 
         {/* Title */}
-        <h1 style={{ fontFamily: "DM Sans", fontSize: "clamp(36px, 5vw, 56px)", fontWeight: "normal", color: "#1a1a1a", letterSpacing: "-0.03em", lineHeight: "1.1", margin: "0 0 16px", textAlign: "center" }}>
-          Community <span style={{ color: activeTokenObj.color }}>{selectedToken}</span> Treasury
+        <h1 style={{ fontFamily: "DM Sans", fontSize: "clamp(36px, 5vw, 56px)", fontWeight: "normal", color: "#1a1a1a", letterSpacing: "-0.03em", lineHeight: "1.1", margin: "0 0 16px", textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", gap: "14px", flexWrap: "wrap" }}>
+          <span>Community</span>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: "10px", color: activeTokenObj.color }}>
+            <TokenIcon symbol={selectedToken} size={42} />
+            {selectedToken}
+          </span>
+          <span>Treasury</span>
         </h1>
         <p style={{ fontFamily: "DM Sans", fontSize: "17px", color: "#7a8a9a", lineHeight: "1.6", margin: "0 auto 32px", maxWidth: "620px", textAlign: "center" }}>
           Request testnet tokens directly from the multi-asset treasury vault. Claim THRU for on-chain gas or tSOL, tUSD, tETH, and tBTC to test the ThruSwap AMM DEX.
@@ -243,7 +249,7 @@ export function Faucet({ setSection }) {
                   transition: "all 0.15s"
                 }}
               >
-                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: tok.color }} />
+                <TokenIcon symbol={tok.symbol} size={18} />
                 <span>{tok.symbol}</span>
                 {isSelected && (
                   <span style={{ fontSize: "11px", color: tok.color, background: `${tok.color}15`, padding: "2px 6px", borderRadius: "6px" }}>
@@ -349,7 +355,10 @@ export function Faucet({ setSection }) {
                       transition: "all 0.15s"
                     }}
                   >
-                    {amt} {selectedToken}
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                      <TokenIcon symbol={selectedToken} size={14} />
+                      <span>{amt} {selectedToken}</span>
+                    </span>
                   </button>
                 ))}
               </div>
@@ -478,6 +487,9 @@ export function Faucet({ setSection }) {
                     transition: "all 0.15s"
                   }}
                 >
+                  <div style={{ display: "flex", justifyContent: "center", marginBottom: "6px" }}>
+                    <TokenIcon symbol={tok.symbol} size={22} />
+                  </div>
                   <div style={{ fontSize: "12px", fontWeight: "600", color: tok.color }}>{tok.symbol}</div>
                   <div style={{ fontSize: "15px", fontWeight: "normal", color: "#1a1a1a", marginTop: "4px" }}>
                     {bal ? Number(bal).toLocaleString() : "0"}

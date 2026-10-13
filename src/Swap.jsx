@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { TokenIcon } from "./TokenIcon.jsx";
 
 const TOKENS = [
   { symbol: "THRU", name: "Thru Native", price: 0.45, color: "#C0392B", decimals: 6 },
@@ -420,11 +421,15 @@ export function Swap({ setSection }) {
               <span key={t.symbol} style={{
                 background: "#f7f9fa",
                 border: "1px solid #e4e9ef",
-                borderRadius: "8px",
+                borderRadius: "10px",
                 padding: "4px 10px",
                 fontSize: "12px",
-                color: "#1a1a1a"
+                color: "#1a1a1a",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px"
               }}>
+                <TokenIcon symbol={t.symbol} size={15} />
                 <strong style={{ color: t.color }}>{t.symbol}</strong>: {(balances[t.symbol] || 0).toLocaleString()}
               </span>
             ))}
@@ -663,32 +668,42 @@ export function Swap({ setSection }) {
                   MAX
                 </button>
 
-                {/* Token Selector */}
-                <select
-                  value={fromToken}
-                  onChange={e => {
-                    const newFrom = e.target.value;
-                    if (newFrom === toToken) setToToken(fromToken);
-                    setFromToken(newFrom);
-                    setFromAmount("");
-                    setToAmount("");
-                  }}
-                  style={{
-                    background: "#ffffff",
-                    border: "1px solid #c8d0da",
-                    borderRadius: "12px",
-                    padding: "8px 12px",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    color: "#1a1a1a",
-                    cursor: "pointer",
-                    outline: "none"
-                  }}
-                >
-                  {TOKENS.map(t => (
-                    <option key={t.symbol} value={t.symbol}>{t.symbol}</option>
-                  ))}
-                </select>
+                {/* Token Selector with Logo */}
+                <div style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  background: "#ffffff",
+                  border: "1px solid #c8d0da",
+                  borderRadius: "12px",
+                  padding: "6px 10px"
+                }}>
+                  <TokenIcon symbol={fromToken} size={22} />
+                  <select
+                    value={fromToken}
+                    onChange={e => {
+                      const newFrom = e.target.value;
+                      if (newFrom === toToken) setToToken(fromToken);
+                      setFromToken(newFrom);
+                      setFromAmount("");
+                      setToAmount("");
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      fontSize: "14px",
+                      fontWeight: "700",
+                      color: "#1a1a1a",
+                      cursor: "pointer",
+                      outline: "none",
+                      fontFamily: "DM Sans, sans-serif"
+                    }}
+                  >
+                    {TOKENS.map(t => (
+                      <option key={t.symbol} value={t.symbol}>{t.symbol}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <div style={{ fontSize: "11px", color: "#a0aec0", marginTop: "4px" }}>
                 ≈ ${fromAmount && !isNaN(fromAmount) ? (parseFloat(fromAmount) * fromObj.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"} USD
@@ -753,32 +768,42 @@ export function Swap({ setSection }) {
                   }}
                 />
 
-                {/* Token Selector */}
-                <select
-                  value={toToken}
-                  onChange={e => {
-                    const newTo = e.target.value;
-                    if (newTo === fromToken) setFromToken(toToken);
-                    setToToken(newTo);
-                    setFromAmount("");
-                    setToAmount("");
-                  }}
-                  style={{
-                    background: "#ffffff",
-                    border: "1px solid #c8d0da",
-                    borderRadius: "12px",
-                    padding: "8px 12px",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    color: "#1a1a1a",
-                    cursor: "pointer",
-                    outline: "none"
-                  }}
-                >
-                  {TOKENS.map(t => (
-                    <option key={t.symbol} value={t.symbol}>{t.symbol}</option>
-                  ))}
-                </select>
+                {/* Token Selector with Logo */}
+                <div style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  background: "#ffffff",
+                  border: "1px solid #c8d0da",
+                  borderRadius: "12px",
+                  padding: "6px 10px"
+                }}>
+                  <TokenIcon symbol={toToken} size={22} />
+                  <select
+                    value={toToken}
+                    onChange={e => {
+                      const newTo = e.target.value;
+                      if (newTo === fromToken) setFromToken(toToken);
+                      setToToken(newTo);
+                      setFromAmount("");
+                      setToAmount("");
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      fontSize: "14px",
+                      fontWeight: "700",
+                      color: "#1a1a1a",
+                      cursor: "pointer",
+                      outline: "none",
+                      fontFamily: "DM Sans, sans-serif"
+                    }}
+                  >
+                    {TOKENS.map(t => (
+                      <option key={t.symbol} value={t.symbol}>{t.symbol}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <div style={{ fontSize: "11px", color: "#a0aec0", marginTop: "4px" }}>
                 ≈ ${toAmount && !isNaN(toAmount) ? (parseFloat(toAmount) * toObj.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"} USD
@@ -796,8 +821,8 @@ export function Swap({ setSection }) {
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
                 <span style={{ color: "#7a8a9a" }}>Rate</span>
-                <span style={{ color: "#1a1a1a", fontWeight: "600" }}>
-                  1 {fromToken} ≈ {(currentRate * 0.998).toFixed(4)} {toToken}
+                <span style={{ color: "#1a1a1a", fontWeight: "600", display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                  <TokenIcon symbol={fromToken} size={14} /> 1 {fromToken} ≈ <TokenIcon symbol={toToken} size={14} /> {(currentRate * 0.998).toFixed(4)} {toToken}
                 </span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
@@ -926,6 +951,10 @@ export function Swap({ setSection }) {
                         textAlign: "center"
                       }}
                     >
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "6px" }}>
+                        <TokenIcon symbol={p.tokenA} size={18} style={{ zIndex: 2 }} />
+                        <TokenIcon symbol={p.tokenB} size={18} style={{ marginLeft: "-6px", zIndex: 1 }} />
+                      </div>
                       <div style={{ fontSize: "13px", fontWeight: "700", color: "#1a1a1a" }}>{p.id}</div>
                       <div style={{ fontSize: "11px", color: "#C0392B", fontWeight: "600", marginTop: "2px" }}>{p.apr} APR</div>
                     </button>
@@ -978,8 +1007,9 @@ export function Swap({ setSection }) {
                   >
                     MAX
                   </button>
-                  <div style={{ fontWeight: "700", fontSize: "14px", color: "#1a1a1a" }}>
-                    {currentPool.tokenA}
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: "700", fontSize: "14px", color: "#1a1a1a" }}>
+                    <TokenIcon symbol={currentPool.tokenA} size={18} />
+                    <span>{currentPool.tokenA}</span>
                   </div>
                 </div>
               </div>
@@ -1033,8 +1063,9 @@ export function Swap({ setSection }) {
                   >
                     MAX
                   </button>
-                  <div style={{ fontWeight: "700", fontSize: "14px", color: "#1a1a1a" }}>
-                    {currentPool.tokenB}
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: "700", fontSize: "14px", color: "#1a1a1a" }}>
+                    <TokenIcon symbol={currentPool.tokenB} size={18} />
+                    <span>{currentPool.tokenB}</span>
                   </div>
                 </div>
               </div>
