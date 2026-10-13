@@ -96,7 +96,7 @@ export function Swap() {
       return;
     }
     const num = parseFloat(val);
-    const feeMultiplier = 0.9975; // 0.25% AMM fee
+    const feeMultiplier = 0.998; // 0.2% fee
     const calculated = (num * currentRate * feeMultiplier).toFixed(toObj.decimals > 6 ? 6 : 4);
     setToAmount(calculated);
   };
@@ -112,7 +112,7 @@ export function Swap() {
     if (toAmount && !isNaN(toAmount)) {
       setFromAmount(toAmount);
       const newRate = (getToken(prevTo).price / getToken(prevFrom).price);
-      setToAmount((parseFloat(toAmount) * newRate * 0.9975).toFixed(getToken(prevFrom).decimals > 6 ? 6 : 4));
+      setToAmount((parseFloat(toAmount) * newRate * 0.998).toFixed(getToken(prevFrom).decimals > 6 ? 6 : 4));
     }
   };
 
@@ -145,7 +145,7 @@ export function Swap() {
       setSwapSuccess({
         from: `${parsedFrom} ${fromToken}`,
         to: `${parsedTo} ${toToken}`,
-        rate: `1 ${fromToken} = ${(currentRate * 0.9975).toFixed(4)} ${toToken}`,
+        rate: `1 ${fromToken} = ${(currentRate * 0.998).toFixed(4)} ${toToken}`,
         hash: fakeTxHash,
         time: "< 0.35s (RISC-V ThruVM Finality)"
       });
@@ -212,7 +212,12 @@ export function Swap() {
     setLiqSuccess(null);
 
     setTimeout(() => {
-      // Deduct balances
+      // 0.2% fee charged on supplied liquidity
+      const feeMultiplier = 0.998;
+      const netValA = Number((valA * feeMultiplier).toFixed(6));
+      const netValB = Number((valB * feeMultiplier).toFixed(6));
+
+      // Deduct full deposit from balances
       const newBalances = {
         ...balances,
         [currentPool.tokenA]: Number((balances[currentPool.tokenA] - valA).toFixed(6)),
@@ -220,16 +225,16 @@ export function Swap() {
       };
       setBalances(newBalances);
 
-      const mintedLP = (Math.sqrt(valA * valB)).toFixed(2);
+      const mintedLP = (Math.sqrt(netValA * netValB)).toFixed(2);
       const newPosition = {
         id: `pos-${Date.now()}`,
         poolId: currentPool.id,
         tokenA: currentPool.tokenA,
         tokenB: currentPool.tokenB,
         lpTokens: parseFloat(mintedLP),
-        share: `${((valA / (currentPool.reserveA + valA)) * 100).toFixed(3)}%`,
-        pooledA: valA,
-        pooledB: valB,
+        share: `${((netValA / (currentPool.reserveA + netValA)) * 100).toFixed(3)}%`,
+        pooledA: netValA,
+        pooledB: netValB,
         earnedFees: "$0.00"
       };
 
@@ -339,39 +344,6 @@ export function Swap() {
             Add Liquidity
           </button>
         </div>
-      </div>
-
-      {/* METRICS BAR */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
-        gap: "16px",
-        marginBottom: "40px"
-      }}>
-        {[
-          { label: "24h Swap Volume", value: "$3,842,190", sub: "+12.4% today" },
-          { label: "Total Value Locked", value: "$9,270,000", sub: "3 Core Pools" },
-          { label: "Execution Finality", value: "< 0.35s", sub: "RISC-V ThruVM" },
-          { label: "AMM Swap Fee", value: "0.25%", sub: "Distributed to LPs" }
-        ].map((m, i) => (
-          <div key={i} style={{
-            background: "#ffffff",
-            border: "1px solid #c8d0da",
-            borderRadius: "16px",
-            padding: "18px 20px",
-            textAlign: "center"
-          }}>
-            <div style={{ fontSize: "12px", color: "#7a8a9a", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "6px" }}>
-              {m.label}
-            </div>
-            <div style={{ fontSize: "22px", fontWeight: "600", color: "#1a1a1a", marginBottom: "2px" }}>
-              {m.value}
-            </div>
-            <div style={{ fontSize: "11px", color: "#C0392B", fontWeight: "500" }}>
-              {m.sub}
-            </div>
-          </div>
-        ))}
       </div>
 
       {/* WALLET BALANCE BAR */}
@@ -690,18 +662,12 @@ export function Swap() {
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
                 <span style={{ color: "#7a8a9a" }}>Rate</span>
                 <span style={{ color: "#1a1a1a", fontWeight: "600" }}>
-                  1 {fromToken} ≈ {(currentRate * 0.9975).toFixed(4)} {toToken}
+                  1 {fromToken} ≈ {(currentRate * 0.998).toFixed(4)} {toToken}
                 </span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
                 <span style={{ color: "#7a8a9a" }}>Slippage Tolerance</span>
                 <span style={{ color: "#1a1a1a", fontWeight: "600" }}>{slippage}%</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-                <span style={{ color: "#7a8a9a" }}>Liquidity Fee (0.25%)</span>
-                <span style={{ color: "#1a1a1a", fontWeight: "600" }}>
-                  {fromAmount ? (parseFloat(fromAmount) * 0.0025).toFixed(4) : "0.00"} {fromToken}
-                </span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <span style={{ color: "#7a8a9a" }}>Routing</span>
@@ -797,7 +763,7 @@ export function Swap() {
                 Add Liquidity to Pool
               </div>
               <p style={{ fontSize: "13px", color: "#7a8a9a", margin: "0 0 24px" }}>
-                Deposit pairs to receive LP tokens and earn 0.25% of all pool swaps proportionally.
+                Deposit pairs to receive LP tokens and earn pool trading rewards proportionally.
               </p>
 
               {/* POOL SELECTOR BUTTONS */}

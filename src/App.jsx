@@ -384,7 +384,7 @@ function Home({ setSection }) {
                 Swap tokens & earn yield on ThruVM.
               </h2>
               <p style={{ fontFamily: "DM Sans", fontSize: "15px", color: "#a0aec0", lineHeight: "1.7", margin: "0 0 32px" }}>
-                Trade THRU and native assets at sub-second finality with low slippage. Supply liquidity to AMM pools to earn continuous protocol fees.
+                Trade THRU and native assets at sub-second finality with low slippage. Supply liquidity to AMM pools to earn continuous trading rewards.
               </p>
               <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
                 <button
