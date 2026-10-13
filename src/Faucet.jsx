@@ -77,6 +77,34 @@ export function Faucet({ setSection }) {
   const [generatingWallet, setGeneratingWallet] = useState(false);
   const [generatedWallet, setGeneratedWallet] = useState(null);
   const [copiedWallet, setCopiedWallet] = useState(false);
+  const [downloadToast, setDownloadToast] = useState(null);
+  const [showPrivateKey, setShowPrivateKey] = useState(false);
+
+  function triggerWalletDownload(wallet) {
+    if (!wallet) return;
+    try {
+      const payload = {
+        name: wallet.name,
+        address: wallet.pubkey,
+        public_key: wallet.pubkey,
+        private_key_hex: wallet.privateKeyHex,
+        network: "thru-alphanet",
+        export_format: "thru-keyfile-v1",
+        created_at: new Date().toISOString(),
+        note: "Store this keyfile securely. Anyone with access to this file controls the account on Thru."
+      };
+
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `thru-wallet-${wallet.name || "account"}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (_) {}
+  }
 
   function handleCopyPubkey(keyStr) {
     if (!keyStr) return;
@@ -174,6 +202,21 @@ export function Faucet({ setSection }) {
     }
   }
 
+  function applyNewWallet(data) {
+    setGeneratedWallet(data);
+    setAddress(data.pubkey);
+    setShowPrivateKey(false);
+    triggerWalletDownload(data);
+    setDownloadToast({
+      title: "Private keys and others downloaded already",
+      filename: `thru-wallet-${data.name}.json`,
+      address: data.pubkey
+    });
+    setTimeout(() => {
+      setDownloadToast(null);
+    }, 3500);
+  }
+
   async function handleGenerateWallet() {
     setGeneratingWallet(true);
     setError(null);
@@ -182,8 +225,7 @@ export function Faucet({ setSection }) {
       if (res.ok) {
         const data = await res.json();
         if (data.success && data.pubkey) {
-          setGeneratedWallet(data);
-          setAddress(data.pubkey);
+          applyNewWallet(data);
           return;
         }
       }
@@ -213,8 +255,7 @@ export function Faucet({ setSection }) {
         privateKeyHex: privHex
       };
 
-      setGeneratedWallet(data);
-      setAddress(fallbackPubkey);
+      applyNewWallet(data);
     } finally {
       setGeneratingWallet(false);
     }
@@ -225,6 +266,60 @@ export function Faucet({ setSection }) {
 
   return (
     <div style={{ paddingTop: "100px", minHeight: "100vh", background: "#ffffff" }}>
+      {/* TOP-RIGHT CORNER POPUP TOAST */}
+      <div style={{
+        position: "fixed",
+        top: "84px",
+        right: "24px",
+        zIndex: 1000,
+        display: "flex",
+        flexDirection: "column",
+        gap: "12px",
+        maxWidth: "400px",
+        width: "calc(100vw - 48px)",
+        pointerEvents: "none"
+      }}>
+        {downloadToast && (
+          <div style={{
+            pointerEvents: "auto",
+            background: "#ffffff",
+            border: "1px solid #86efac",
+            borderLeft: "4px solid #16a34a",
+            borderRadius: "16px",
+            padding: "16px 18px",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "5px",
+            animation: "slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1)"
+          }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#166534", fontSize: "14px", fontWeight: "700", fontFamily: "DM Sans" }}>
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#dcfce7", color: "#15803d", fontSize: "11px", fontWeight: "bold" }}>✓</span>
+                {downloadToast.title}
+              </div>
+              <button
+                type="button"
+                onClick={() => setDownloadToast(null)}
+                style={{ background: "none", border: "none", color: "#7a8a9a", cursor: "pointer", fontSize: "18px", padding: "0 4px", lineHeight: "1" }}
+              >
+                ×
+              </button>
+            </div>
+            <div style={{ fontSize: "13px", color: "#15803d", paddingLeft: "26px", fontFamily: "DM Sans" }}>
+              File: <strong>{downloadToast.filename}</strong>
+            </div>
+            <div style={{ fontFamily: "monospace", fontSize: "11px", color: "#7a8a9a", paddingLeft: "26px", wordBreak: "break-all" }}>
+              Address: {downloadToast.address}
+            </div>
+            {/* Countdown progress bar lasting 3.5s */}
+            <div style={{ height: "3px", background: "#bbf7d0", width: "100%", borderRadius: "2px", overflow: "hidden", marginTop: "4px" }}>
+              <div style={{ height: "100%", background: "#16a34a", animation: "toastProgress 3.5s linear forwards" }} />
+            </div>
+          </div>
+        )}
+      </div>
+
       <div style={{ maxWidth: "880px", margin: "0 auto", padding: "40px 24px 80px", display: "flex", flexDirection: "column", alignItems: "center" }}>
 
         {/* Eyebrow */}
@@ -476,17 +571,48 @@ export function Faucet({ setSection }) {
             </div>
           )}
 
-          {/* Newly Generated Wallet Notice */}
+          {/* Newly Generated Wallet Notice - Downloadable Keyfile Card */}
           {generatedWallet && (
-            <div style={{ marginTop: "24px", padding: "20px 24px", borderRadius: "16px", background: "#f8fafc", border: "1px solid #cbd5e1", textAlign: "left", width: "100%", boxSizing: "border-box" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px", flexWrap: "wrap", gap: "10px" }}>
-                <div style={{ fontFamily: "DM Sans", fontSize: "14px", fontWeight: "600", color: "#0f172a", display: "flex", alignItems: "center", gap: "8px" }}>
-                  <span>🔑</span> Newly Generated Thru Address
+            <div style={{
+              marginTop: "24px",
+              padding: "22px 24px",
+              borderRadius: "18px",
+              background: "#f8fafc",
+              border: "1px solid #cbd5e1",
+              textAlign: "left",
+              width: "100%",
+              boxSizing: "border-box",
+              boxShadow: "0 4px 14px rgba(0,0,0,0.03)"
+            }}>
+              {/* Header Row */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px", flexWrap: "wrap", gap: "10px" }}>
+                <div style={{ fontFamily: "DM Sans", fontSize: "14px", fontWeight: "700", color: "#0f172a", display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span>🔑</span> Newly Generated Thru Wallet
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
                   <span style={{ fontSize: "11px", background: "#dcfce7", color: "#166534", padding: "3px 8px", borderRadius: "6px", fontWeight: "600", fontFamily: "DM Sans" }}>
                     ✓ Filled in address field
                   </span>
+                  <span style={{ fontSize: "11px", background: "#e0f2fe", color: "#0369a1", padding: "3px 8px", borderRadius: "6px", fontWeight: "600", fontFamily: "DM Sans" }}>
+                    ✓ Keyfile downloaded
+                  </span>
+                </div>
+              </div>
+
+              {/* Wallet Info */}
+              <div style={{ fontFamily: "DM Sans", fontSize: "13px", color: "#475569", lineHeight: "1.8" }}>
+                <div>
+                  <strong style={{ color: "#334155" }}>Account Key:</strong>{" "}
+                  <code style={{ background: "#e2e8f0", padding: "3px 8px", borderRadius: "6px", color: "#0f172a", fontSize: "12px" }}>
+                    {generatedWallet.name}
+                  </code>
+                </div>
+
+                <div style={{ marginTop: "6px", display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                  <strong style={{ color: "#334155" }}>Public Address:</strong>
+                  <code style={{ background: "#e2e8f0", padding: "3px 8px", borderRadius: "6px", color: "#0f172a", fontWeight: "600", fontSize: "12px", wordBreak: "break-all" }}>
+                    {generatedWallet.pubkey}
+                  </code>
                   <button
                     type="button"
                     onClick={() => handleCopyPubkey(generatedWallet.pubkey)}
@@ -494,24 +620,99 @@ export function Faucet({ setSection }) {
                       background: copiedWallet ? "#16a34a" : "#0f172a",
                       color: "#ffffff",
                       border: "none",
-                      borderRadius: "8px",
-                      padding: "5px 12px",
+                      borderRadius: "6px",
+                      padding: "3px 10px",
                       fontFamily: "DM Sans",
-                      fontSize: "12px",
+                      fontSize: "11px",
                       fontWeight: "600",
                       cursor: "pointer",
                       transition: "all 0.15s"
                     }}
                   >
-                    {copiedWallet ? "✓ Copied!" : "📋 Copy"}
+                    {copiedWallet ? "✓ Copied" : "📋 Copy"}
                   </button>
                 </div>
-              </div>
-              <div style={{ fontFamily: "DM Sans", fontSize: "12px", color: "#475569", wordBreak: "break-all", lineHeight: "1.8" }}>
-                <div><strong style={{ color: "#334155" }}>Account Key:</strong> <code style={{ background: "#e2e8f0", padding: "2px 6px", borderRadius: "5px", color: "#0f172a" }}>{generatedWallet.name}</code></div>
-                <div style={{ marginTop: "4px" }}><strong style={{ color: "#334155" }}>Public Address:</strong> <code style={{ background: "#e2e8f0", padding: "2px 6px", borderRadius: "5px", color: "#0f172a", fontWeight: "600" }}>{generatedWallet.pubkey}</code></div>
-                <div style={{ marginTop: "4px" }}><strong style={{ color: "#334155" }}>Private Key Hex:</strong> <code style={{ background: "#e2e8f0", padding: "2px 6px", borderRadius: "5px", color: "#475569" }}>{generatedWallet.privateKeyHex}</code></div>
-                <div style={{ color: "#64748b", marginTop: "8px", fontSize: "11px" }}>* Ready to receive gas and multi-token treasury claims immediately.</div>
+
+                {/* Downloadable Keyfile Box */}
+                <div style={{
+                  marginTop: "14px",
+                  padding: "12px 14px",
+                  borderRadius: "12px",
+                  background: "#ffffff",
+                  border: "1px solid #e2e8f0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  gap: "10px"
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px" }}>
+                      📄
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "monospace", fontSize: "12px", fontWeight: "600", color: "#0f172a" }}>
+                        thru-wallet-{generatedWallet.name}.json
+                      </div>
+                      <div style={{ fontSize: "11px", color: "#64748b" }}>
+                        Private keys, public address & network configuration
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => triggerWalletDownload(generatedWallet)}
+                    style={{
+                      background: "#0f172a",
+                      color: "#ffffff",
+                      border: "none",
+                      borderRadius: "8px",
+                      padding: "7px 14px",
+                      fontFamily: "DM Sans",
+                      fontSize: "12px",
+                      fontWeight: "600",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px"
+                    }}
+                  >
+                    <span>⬇</span> Download File (.json)
+                  </button>
+                </div>
+
+                {/* Security Note & Optional Reveal */}
+                <div style={{ marginTop: "10px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
+                  <span style={{ fontSize: "11px", color: "#64748b" }}>
+                    🔒 Private keys and credentials downloaded directly to your device.
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowPrivateKey(prev => !prev)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#64748b",
+                      fontSize: "11px",
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                      padding: "0"
+                    }}
+                  >
+                    {showPrivateKey ? "Hide private key hex" : "View private key hex"}
+                  </button>
+                </div>
+
+                {showPrivateKey && (
+                  <div style={{ marginTop: "8px", padding: "10px 12px", borderRadius: "8px", background: "#fef2f2", border: "1px solid #fecaca" }}>
+                    <div style={{ fontSize: "11px", fontWeight: "600", color: "#991b1b", marginBottom: "4px" }}>
+                      Private Key Hex (Keep Secret):
+                    </div>
+                    <code style={{ fontSize: "11px", color: "#991b1b", wordBreak: "break-all" }}>
+                      {generatedWallet.privateKeyHex}
+                    </code>
+                  </div>
+                )}
               </div>
             </div>
           )}
