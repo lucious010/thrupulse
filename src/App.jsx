@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Faucet } from "./Faucet.jsx";
 
 // ─── PALETTE ─────────────────────────────────────────────────────────────────
 // Cream: #ffffff  |  Dark: #1a1a1a  |  Mid: #e4e9ef  |  Red: #C0392B
@@ -276,7 +277,7 @@ function Nav({ section, setSection, onBack, showBack }) {
               </svg>
             </button>
             <div style={{ fontFamily: "DM Sans", fontSize: "11px", letterSpacing: "0.15em", color: "#7a8a9a", textTransform: "uppercase", marginBottom: "24px" }}>Navigation</div>
-            {["home", "protocols", "news", "guides"].map(s => (
+            {["home", "protocols", "faucet", "news", "guides"].map(s => (
               <button key={s} onClick={() => handleNav(s)} style={{
                 background: "none", border: "none", borderBottom: "1px solid #2a2a2a",
                 color: section === s ? "#C0392B" : "#ffffff",
@@ -320,7 +321,7 @@ function Nav({ section, setSection, onBack, showBack }) {
         {/* Desktop nav links — hidden on mobile */}
         {!showBack && !isMobile && (
           <div style={{ display: "flex", gap: "32px" }}>
-            {["home", "protocols", "news", "guides"].map(s => (
+            {["home", "protocols", "faucet", "news", "guides"].map(s => (
               <button key={s} onClick={() => setSection(s)} style={{
                 background: "none", border: "none", cursor: "pointer",
                 fontFamily: "DM Sans", fontSize: "13px", letterSpacing: "0.05em",
@@ -1328,6 +1329,7 @@ export default function App() {
         <>
           {section === "home"      && <Home setSection={setSection} openPost={openPost} />}
           {section === "protocols" && <Protocols />}
+          {section === "faucet"    && <Faucet />}
           {section === "news"      && <News openPost={openPost} />}
           {section === "guides"    && <Guides />}
         </>
