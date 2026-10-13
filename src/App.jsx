@@ -972,8 +972,8 @@ export default function App() {
 
       {section === "home"      && <Home setSection={setSection} />}
       {section === "protocols" && <Protocols />}
-      {section === "swap"      && <Swap />}
-      {section === "faucet"    && <Faucet />}
+      {section === "swap"      && <Swap setSection={setSection} />}
+      {section === "faucet"    && <Faucet setSection={setSection} />}
       {section === "guides"    && <Guides />}
 
       <footer style={{ borderTop: "1px solid #c8d0da", padding: "24px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", background: "#e4e9ef" }}>

@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { getFaucetInfo, claimFromBank, createQuickWallet } from './src/faucet-api.js'
+import { getFaucetInfo, claimFromBank, createQuickWallet, getWalletBalance } from './src/faucet-api.js'
 
 function faucetApiPlugin() {
   return {
@@ -29,7 +29,7 @@ function faucetApiPlugin() {
             try {
               const parsed = JSON.parse(body || '{}')
               const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1'
-              const result = await claimFromBank(parsed.address, parsed.amount, ip)
+              const result = await claimFromBank(parsed.address, parsed.amount, parsed.token || 'THRU', ip)
               res.setHeader('Content-Type', 'application/json')
               if (!result.success) res.statusCode = 400
               res.end(JSON.stringify(result))
@@ -39,6 +39,21 @@ function faucetApiPlugin() {
               res.end(JSON.stringify({ error: e.message }))
             }
           })
+          return
+        }
+
+        if (url.pathname === '/api/wallet/balance' && req.method === 'GET') {
+          try {
+            const addr = url.searchParams.get('address') || 'default'
+            const result = await getWalletBalance(addr)
+            res.setHeader('Content-Type', 'application/json')
+            if (!result.success) res.statusCode = 400
+            res.end(JSON.stringify(result))
+          } catch (e) {
+            res.statusCode = 500
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ error: e.message }))
+          }
           return
         }
 
