@@ -46,25 +46,48 @@ const TOKENS_CONFIG = {
 
 export function Faucet({ setSection }) {
   const [selectedToken, setSelectedToken] = useState("THRU");
-  const [faucetInfo, setFaucetInfo] = useState({
-    status: "loading",
-    balance: 177907,
-    pubkey: "",
-    reserves: {
+  const [faucetInfo, setFaucetInfo] = useState(() => {
+    const defaultReserves = {
       THRU: 177907,
       tSOL: 25000,
       tUSD: 1500000,
       tETH: 500,
       tBTC: 50
-    },
-    dispenseAmounts: {
-      THRU: 100,
-      tSOL: 5,
-      tUSD: 250,
-      tETH: 0.5,
-      tBTC: 0.05
-    },
-    cooldownMinutes: 3
+    };
+    try {
+      const saved = localStorage.getItem("thrupulse_treasury_reserves");
+      const parsed = saved ? JSON.parse(saved) : null;
+      const reserves = parsed || defaultReserves;
+      return {
+        status: "online",
+        balance: reserves.THRU,
+        pubkey: "",
+        reserves,
+        dispenseAmounts: {
+          THRU: 100,
+          tSOL: 5,
+          tUSD: 250,
+          tETH: 0.5,
+          tBTC: 0.05
+        },
+        cooldownMinutes: 3
+      };
+    } catch {
+      return {
+        status: "online",
+        balance: 177907,
+        pubkey: "",
+        reserves: defaultReserves,
+        dispenseAmounts: {
+          THRU: 100,
+          tSOL: 5,
+          tUSD: 250,
+          tETH: 0.5,
+          tBTC: 0.05
+        },
+        cooldownMinutes: 3
+      };
+    }
   });
 
   const [address, setAddress] = useState("");
@@ -73,9 +96,10 @@ export function Faucet({ setSection }) {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
 
-  // Quick wallet creation state
+  // Quick wallet creation & Claim toast states
   const [generatingWallet, setGeneratingWallet] = useState(false);
   const [downloadToast, setDownloadToast] = useState(null);
+  const [claimToast, setClaimToast] = useState(null);
 
   function triggerWalletDownload(wallet) {
     if (!wallet) return;
@@ -123,15 +147,25 @@ export function Faucet({ setSection }) {
       const contentType = res.headers.get("content-type") || "";
       if (res.ok && contentType.includes("application/json")) {
         const data = await res.json();
-        setFaucetInfo(prev => ({
-          ...prev,
-          ...data,
-          status: "online",
-          reserves: {
+        setFaucetInfo(prev => {
+          let savedLocal = null;
+          try {
+            const s = localStorage.getItem("thrupulse_treasury_reserves");
+            if (s) savedLocal = JSON.parse(s);
+          } catch (_) {}
+          const mergedReserves = {
             ...prev.reserves,
-            ...(data.reserves || {})
-          }
-        }));
+            ...(data.reserves || {}),
+            ...(savedLocal || {})
+          };
+          return {
+            ...prev,
+            ...data,
+            status: "online",
+            balance: mergedReserves.THRU ?? (data.balance || prev.balance),
+            reserves: mergedReserves
+          };
+        });
       } else {
         setFaucetInfo(prev => ({ ...prev, status: "online" }));
       }
@@ -149,7 +183,6 @@ export function Faucet({ setSection }) {
 
     setLoading(true);
     setError(null);
-    setResult(null);
 
     try {
       let data = null;
@@ -171,18 +204,50 @@ export function Faucet({ setSection }) {
 
       // If backend API isn't available or returned non-JSON, fallback gracefully to treasury vault simulation
       if (!data || !data.success) {
-        const sig = `tx_thruvm_vault_${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`;
+        const sig = `tx_thruvm_betanet_${address.trim().slice(0, 8)}_${Math.random().toString(36).substring(2, 12)}`;
         data = {
           success: true,
           recipient: address.trim(),
           amount: selectedAmount,
           token: selectedToken,
           signature: sig,
+          slot: Math.floor(1000000 + Math.random() * 50000),
           source: "treasury-vault"
         };
       }
 
-      setResult(data);
+      const claimedAmt = Number(data.amount || selectedAmount);
+
+      // Deduct from Treasury Reserves so it visibly reduces when you claim!
+      setFaucetInfo(prev => {
+        const curRes = prev.reserves || {};
+        const oldTokenRes = Number(curRes[selectedToken] ?? (selectedToken === "THRU" ? prev.balance : 0));
+        const newTokenRes = Number(Math.max(0, oldTokenRes - claimedAmt).toFixed(6));
+        const updatedRes = {
+          ...curRes,
+          [selectedToken]: newTokenRes
+        };
+        try {
+          localStorage.setItem("thrupulse_treasury_reserves", JSON.stringify(updatedRes));
+        } catch (_) {}
+        return {
+          ...prev,
+          balance: selectedToken === "THRU" ? newTokenRes : prev.balance,
+          reserves: updatedRes
+        };
+      });
+
+      // Show top-right popup toast lasting 4 seconds
+      setClaimToast({
+        amount: claimedAmt,
+        token: data.token || selectedToken,
+        recipient: address.trim(),
+        signature: data.signature,
+        slot: data.slot
+      });
+      setTimeout(() => {
+        setClaimToast(null);
+      }, 4000);
 
       // Automatically credit the user's local test wallet balances so Swap & Liquidity immediately reflects it!
       try {
@@ -194,14 +259,12 @@ export function Faucet({ setSection }) {
           tETH: Number(currentBalances.tETH || 0),
           tSOL: Number(currentBalances.tSOL || 0),
           tBTC: Number(currentBalances.tBTC || 0),
-          [selectedToken]: Number((oldVal + Number(data.amount || selectedAmount)).toFixed(6))
+          [selectedToken]: Number((oldVal + claimedAmt).toFixed(6))
         };
         localStorage.setItem("thrupulse_balances", JSON.stringify(updatedBalances));
         localStorage.setItem("thrupulse_balances_v", "2");
         window.dispatchEvent(new Event("thrupulse_balance_updated"));
       } catch (_) {}
-
-      fetchFaucetInfo(); // refresh pool balance
     } catch (err) {
       setError(`Network error: ${err.message}`);
     } finally {
@@ -293,6 +356,70 @@ export function Faucet({ setSection }) {
         width: "calc(100vw - 48px)",
         pointerEvents: "none"
       }}>
+        {/* Claim Success Popup Toast */}
+        {claimToast && (
+          <div style={{
+            pointerEvents: "auto",
+            background: "#ffffff",
+            border: "1px solid #86efac",
+            borderLeft: "4px solid #16a34a",
+            borderRadius: "16px",
+            padding: "16px 18px",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "6px",
+            animation: "slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1)"
+          }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#166534", fontSize: "14px", fontWeight: "700", fontFamily: "DM Sans" }}>
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#dcfce7", color: "#15803d", fontSize: "11px", fontWeight: "bold" }}>✓</span>
+                Claimed {claimToast.amount} {claimToast.token}!
+              </div>
+              <button
+                type="button"
+                onClick={() => setClaimToast(null)}
+                style={{ background: "none", border: "none", color: "#7a8a9a", cursor: "pointer", fontSize: "18px", padding: "0 4px", lineHeight: "1" }}
+              >
+                ×
+              </button>
+            </div>
+            <div style={{ fontSize: "12px", color: "#15803d", paddingLeft: "26px", fontFamily: "DM Sans" }}>
+              Wallet Synced: <strong>+{claimToast.amount} {claimToast.token} credited</strong>
+            </div>
+            {claimToast.signature && (
+              <div style={{ paddingLeft: "26px", fontFamily: "monospace", fontSize: "11px", color: "#64748b", wordBreak: "break-all" }}>
+                Tx: {claimToast.signature}
+              </div>
+            )}
+            {setSection && (
+              <div style={{ paddingLeft: "26px", marginTop: "2px" }}>
+                <button
+                  type="button"
+                  onClick={() => setSection("swap")}
+                  style={{
+                    background: "#1a1a1a",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "8px",
+                    padding: "5px 12px",
+                    fontFamily: "DM Sans",
+                    fontSize: "11px",
+                    fontWeight: "600",
+                    cursor: "pointer"
+                  }}
+                >
+                  Trade on ThruSwap →
+                </button>
+              </div>
+            )}
+            {/* Countdown progress bar lasting 4s */}
+            <div style={{ height: "3px", background: "#bbf7d0", width: "100%", borderRadius: "2px", overflow: "hidden", marginTop: "4px" }}>
+              <div style={{ height: "100%", background: "#16a34a", animation: "toastProgress 4s linear forwards" }} />
+            </div>
+          </div>
+        )}
+
         {downloadToast && (
           <div style={{
             pointerEvents: "auto",
@@ -539,49 +666,6 @@ export function Faucet({ setSection }) {
           {error && (
             <div style={{ marginTop: "20px", padding: "14px 18px", borderRadius: "12px", background: "#fdf2f2", border: "1px solid #f5c6cb", color: "#C0392B", fontFamily: "DM Sans", fontSize: "13px", textAlign: "center" }}>
               ⚠️ {error}
-            </div>
-          )}
-
-          {/* Success Notice */}
-          {result && (
-            <div style={{ marginTop: "24px", padding: "24px", borderRadius: "16px", background: "#f4fcf6", border: "1px solid #c3e6cb", textAlign: "center" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", color: "#27ae60", fontFamily: "DM Sans", fontSize: "16px", fontWeight: "bold", marginBottom: "12px" }}>
-                <span>✅</span> Successfully claimed {result.amount} {result.token || selectedToken}!
-              </div>
-              <div style={{ fontFamily: "DM Sans", fontSize: "13px", color: "#3a3028", lineHeight: "1.7", marginBottom: "16px" }}>
-                <div><strong>Recipient:</strong> <span style={{ wordBreak: "break-all" }}>{result.recipient}</span></div>
-                <div><strong>Amount Credited:</strong> {result.amount} {result.token || selectedToken}</div>
-                <div><strong>Wallet Synced:</strong> Updated in your Test Wallet Balances</div>
-                {result.signature && (
-                  <div style={{ marginTop: "6px" }}>
-                    <strong>Tx Signature:</strong><br />
-                    <code style={{ background: "#e8f5e9", padding: "4px 8px", borderRadius: "6px", fontSize: "12px", wordBreak: "break-all", display: "inline-block", marginTop: "4px" }}>
-                      {result.signature}
-                    </code>
-                  </div>
-                )}
-                {result.slot && <div style={{ marginTop: "4px" }}><strong>Slot:</strong> #{result.slot}</div>}
-              </div>
-
-              {setSection && (
-                <button
-                  type="button"
-                  onClick={() => setSection("swap")}
-                  style={{
-                    background: "#1a1a1a",
-                    color: "#ffffff",
-                    border: "none",
-                    borderRadius: "10px",
-                    padding: "9px 20px",
-                    fontFamily: "DM Sans",
-                    fontSize: "13px",
-                    fontWeight: "600",
-                    cursor: "pointer"
-                  }}
-                >
-                  Trade {selectedToken} on ThruSwap →
-                </button>
-              )}
             </div>
           )}
 
