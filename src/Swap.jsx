@@ -320,7 +320,7 @@ export function Swap({ setSection }) {
   };
 
   return (
-    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "40px 24px 100px", fontFamily: "DM Sans, sans-serif" }}>
+    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "104px 24px 100px", fontFamily: "DM Sans, sans-serif" }}>
       
       {/* HEADER SECTION */}
       <div style={{ textAlign: "center", marginBottom: "40px" }}>
