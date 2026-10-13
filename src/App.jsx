@@ -575,12 +575,12 @@ function Guides() {
         <Output label="installed paths">{`~/.thru/sdk/toolchain/\n~/.thru/sdk/c/`}</Output>
       </Step>
 
-      <Step num="04" tag="network" title="Connect to the alphanet">
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Verify your CLI can reach the Thru alphanet node:</p>
+      <Step num="04" tag="network" title="Connect to the betanet">
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Verify your CLI can reach the Thru betanet node:</p>
         <CodeBlock label="terminal">{`thru --json getversion`}</CodeBlock>
         <Output label="expected output">{`{\n  "getversion": {\n    "status": "success",\n    "thru-node": "0.4.1",\n    "thru-rpc": "sha-a81ff4c"\n  }\n}`}</Output>
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>The default RPC endpoint is <Ic>https://rpc.alphanet.thru.org</Ic>. If needed, configure it in <Ic>~/.thru/cli/config.yaml</Ic>:</p>
-        <CodeBlock label="config.yaml">{`rpc_base_url: https://rpc.alphanet.thru.org`}</CodeBlock>
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>The default RPC endpoint is <Ic>https://rpc.betanet.thru.org</Ic>. If needed, configure it in <Ic>~/.thru/cli/config.yaml</Ic>:</p>
+        <CodeBlock label="config.yaml">{`rpc_base_url: https://rpc.betanet.thru.org`}</CodeBlock>
       </Step>
 
       <Step num="05" tag="identity" title="Generate a keypair">
@@ -600,7 +600,7 @@ function Guides() {
         <CodeBlock label="terminal">{`thru faucet withdraw default 10000`}</CodeBlock>
         <Output label="expected output">{`Withdrew 10000 tokens from faucet to default`}</Output>
         <CodeBlock label="terminal">{`thru getbalance default`}</CodeBlock>
-        <Alert type="success">You are fully set up on the Thru alphanet! You can now compile RISC-V programs, deploy contracts, or claim tokens via our Faucet page.</Alert>
+        <Alert type="success">You are fully set up on the Thru betanet! You can now compile RISC-V programs, deploy contracts, or claim tokens via our Faucet page.</Alert>
       </Step>
     </>
   );
@@ -625,11 +625,11 @@ function Guides() {
         <Output label="installed paths">{`%USERPROFILE%\\.thru\\sdk\\toolchain\\\n%USERPROFILE%\\.thru\\sdk\\c\\`}</Output>
       </Step>
 
-      <Step num="04" tag="network" title="Connect to the alphanet">
+      <Step num="04" tag="network" title="Connect to the betanet">
         <CodeBlock label="powershell">{`thru --json getversion`}</CodeBlock>
         <Output label="expected output">{`{\n  "getversion": {\n    "status": "success",\n    "thru-node": "0.4.1",\n    "thru-rpc": "sha-a81ff4c"\n  }\n}`}</Output>
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>The default RPC URL is <Ic>https://rpc.alphanet.thru.org</Ic>. If needed, edit <Ic>%USERPROFILE%\.thru\cli\config.yaml</Ic>:</p>
-        <CodeBlock label="config.yaml">{`rpc_base_url: https://rpc.alphanet.thru.org`}</CodeBlock>
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>The default RPC URL is <Ic>https://rpc.betanet.thru.org</Ic>. If needed, edit <Ic>%USERPROFILE%\.thru\cli\config.yaml</Ic>:</p>
+        <CodeBlock label="config.yaml">{`rpc_base_url: https://rpc.betanet.thru.org`}</CodeBlock>
       </Step>
 
       <Step num="05" tag="identity" title="Generate a keypair">
@@ -646,7 +646,7 @@ function Guides() {
         <CodeBlock label="powershell">{`thru faucet withdraw default 10000`}</CodeBlock>
         <Output label="expected output">{`Withdrew 10000 tokens from faucet to default`}</Output>
         <CodeBlock label="powershell">{`thru getbalance default`}</CodeBlock>
-        <Alert type="success">You are fully set up on the Thru alphanet on Windows!</Alert>
+        <Alert type="success">You are fully set up on the Thru betanet on Windows!</Alert>
       </Step>
     </>
   );
@@ -662,7 +662,7 @@ function Guides() {
             {guide === "setup" ? "Getting Started with Thru" : guide === "token" ? "Build a Token Program on Thru" : "Build a Calculator Program on Thru"}
           </h1>
           <p style={{ fontFamily: "DM Sans", fontSize: "16px", color: "#7a8a9a", lineHeight: "1.7", margin: "0 auto 24px", maxWidth: "560px" }}>
-            {guide === "setup" ? "Install the CLI, connect to the alphanet, and fund your first on-chain account." : guide === "token" ? "Write, build and deploy a C token program on the Thru RISC-V blockchain." : "Write a C program that reads two numbers from transaction data and adds them on-chain."}
+            {guide === "setup" ? "Install the CLI, connect to the betanet, and fund your first on-chain account." : guide === "token" ? "Write, build and deploy a C token program on the Thru RISC-V blockchain." : "Write a C program that reads two numbers from transaction data and adds them on-chain."}
           </p>
         </div>
 
@@ -701,7 +701,7 @@ function Guides() {
         <div style={{ marginTop: "72px", background: "#fff", border: "1px solid #e4e9ef", borderRadius: "20px", padding: "40px" }}>
           <h3 style={{ fontFamily: "DM Sans", fontSize: "20px", fontWeight: "600", marginBottom: "24px", color: "#1a1a1a", letterSpacing: "-0.02em" }}>Setup checklist</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {["Node.js 18+ installed", "Thru CLI v0.4+ installed via npm", "RISC-V toolchain installed (thru dev toolchain install)", "C SDK installed (thru dev sdk install c)", "Connected to alphanet RPC (rpc.alphanet.thru.org)", "Keypair generated and stored locally", "On-chain account created with state proofs", "Faucet tokens claimed (thru faucet withdraw)"].map(item => (
+            {["Node.js 18+ installed", "Thru CLI v0.4+ installed via npm", "RISC-V toolchain installed (thru dev toolchain install)", "C SDK installed (thru dev sdk install c)", "Connected to betanet RPC (rpc.betanet.thru.org)", "Keypair generated and stored locally", "On-chain account created with state proofs", "Faucet tokens claimed (thru faucet withdraw)"].map(item => (
               <div key={item} style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "14px", color: "#7a8a9a", fontFamily: "DM Sans" }}>
                 <div style={{ width: "20px", height: "20px", borderRadius: "6px", background: "#edfaf4", border: "1px solid #9be5c0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "11px", color: "#065f46" }}>✓</div>
                 {item}
@@ -778,7 +778,7 @@ TSDK_ENTRYPOINT_FN void start(void) {
               <Alert type="warn">If you see a compiler error, make sure your C SDK and toolchain are up to date: <Ic>thru dev sdk update c</Ic></Alert>
             </Step>
 
-            <Step num="05" tag="deploy" title="Deploy to the alphanet">
+            <Step num="05" tag="deploy" title="Deploy to the betanet">
               <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>First verify the network is up, then deploy your program with a unique seed:</p>
               <CodeBlock label="terminal">{`thru --json getversion`}</CodeBlock>
               <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Once you see a success response, create a managed program:</p>
@@ -793,7 +793,7 @@ Info: Program account: taN7kZOQ...`}</Output>
               <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Execute the program with instruction data. Pass a hex-encoded amount (e.g. 1000 tokens):</p>
               <CodeBlock label="terminal">{`thru txn execute <your-program-account> e803000000000000`}</CodeBlock>
               <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Replace <Ic>{`<your-program-account>`}</Ic> with the Program account address from the deploy step.</p>
-              <Alert type="warn">The alphanet may timeout — always run <Ic>thru --json getversion</Ic> first and retry on failure.</Alert>
+              <Alert type="warn">The betanet may timeout — always run <Ic>thru --json getversion</Ic> first and retry on failure.</Alert>
             </Step>
 
             <Step num="07" tag="verify" title="Verify the transaction">
@@ -801,7 +801,7 @@ Info: Program account: taN7kZOQ...`}</Output>
               <CodeBlock label="terminal">{`thru txn get <transaction-signature>`}</CodeBlock>
               <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Or view it on the block explorer:</p>
               <CodeBlock label="terminal">{`open https://scan.thru.org`}</CodeBlock>
-              <Alert type="success">Your token program is live on the Thru alphanet. You can now iterate on the logic, add state management, and build more complex programs.</Alert>
+              <Alert type="success">Your token program is live on the Thru betanet. You can now iterate on the logic, add state management, and build more complex programs.</Alert>
             </Step>
 
           </div>
@@ -881,7 +881,7 @@ TSDK_ENTRYPOINT_FN void start(void) {
               <Output label="expected output">{`build/thruvm/bin/calculator_c.bin`}</Output>
             </Step>
 
-            <Step num="05" tag="deploy" title="Deploy to the alphanet">
+            <Step num="05" tag="deploy" title="Deploy to the betanet">
               <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Always verify the network first, then deploy with a unique seed:</p>
               <CodeBlock label="terminal">{`thru --json getversion`}</CodeBlock>
               <CodeBlock label="terminal">{`thru program create default_calculator build/thruvm/bin/calculator_c.bin`}</CodeBlock>

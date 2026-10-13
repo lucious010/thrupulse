@@ -85,7 +85,7 @@ export function Faucet({ setSection }) {
         address: wallet.pubkey,
         public_key: wallet.pubkey,
         private_key_hex: wallet.privateKeyHex,
-        network: "thru-alphanet",
+        network: "thru-betanet",
         export_format: "thru-keyfile-v1",
         created_at: new Date().toISOString(),
         note: "Store this keyfile securely. Anyone with access to this file controls the account on Thru."
@@ -313,7 +313,7 @@ export function Faucet({ setSection }) {
         <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", border: "1px solid #c8d0da", borderRadius: "12px", padding: "6px 14px", marginBottom: "24px" }}>
           <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#C0392B" }} />
           <span style={{ fontFamily: "DM Sans", fontSize: "11px", color: "#7a8a9a", letterSpacing: "0.1em" }}>
-            Multi-Token Treasury · Thru Alphanet
+            Multi-Token Treasury · Thru Betanet
           </span>
         </div>
 
@@ -401,7 +401,7 @@ export function Faucet({ setSection }) {
             <div style={{ fontFamily: "DM Sans", fontSize: "12px", color: "#7a8a9a", textTransform: "uppercase", letterSpacing: "0.08em" }}>Network Status</div>
             <div style={{ fontFamily: "DM Sans", fontSize: "18px", color: "#1a1a1a", fontWeight: "normal", marginTop: "8px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
               <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: faucetInfo.status === "online" ? "#27ae60" : "#e67e22" }} />
-              {faucetInfo.status === "online" ? "Alphanet Node Live" : "Connecting..."}
+              {faucetInfo.status === "online" ? "Betanet Node Live" : "Connecting..."}
             </div>
           </div>
         </div>
