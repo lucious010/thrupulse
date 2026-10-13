@@ -194,6 +194,7 @@ export function Swap({ setSection }) {
         hash: fakeTxHash,
         time: "< 0.35s (RISC-V ThruVM Finality)"
       });
+      setTimeout(() => setSwapSuccess(null), 8000);
 
       setFromAmount("");
       setToAmount("");
@@ -290,6 +291,7 @@ export function Swap({ setSection }) {
         lp: `${mintedLP} ${currentPool.id} LP Tokens`,
         hash: "tx_thruvm_lp_" + Math.random().toString(36).substring(2, 12)
       });
+      setTimeout(() => setLiqSuccess(null), 8000);
 
       setLiqAmountA("");
       setLiqAmountB("");
@@ -322,6 +324,92 @@ export function Swap({ setSection }) {
   return (
     <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "104px 24px 100px", fontFamily: "DM Sans, sans-serif" }}>
       
+      {/* TOP-RIGHT CORNER POPUPS */}
+      <div style={{
+        position: "fixed",
+        top: "84px",
+        right: "24px",
+        zIndex: 1000,
+        display: "flex",
+        flexDirection: "column",
+        gap: "12px",
+        maxWidth: "400px",
+        width: "calc(100vw - 48px)",
+        pointerEvents: "none"
+      }}>
+        {/* Swap Success Popup */}
+        {swapSuccess && (
+          <div style={{
+            pointerEvents: "auto",
+            background: "#ffffff",
+            border: "1px solid #86efac",
+            borderLeft: "4px solid #16a34a",
+            borderRadius: "16px",
+            padding: "16px 18px",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "4px",
+            animation: "slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1)"
+          }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#166534", fontSize: "14px", fontWeight: "700" }}>
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#dcfce7", color: "#15803d", fontSize: "11px", fontWeight: "bold" }}>✓</span>
+                Swap Executed Successfully
+              </div>
+              <button
+                onClick={() => setSwapSuccess(null)}
+                style={{ background: "none", border: "none", color: "#7a8a9a", cursor: "pointer", fontSize: "18px", padding: "0 4px", lineHeight: "1" }}
+              >
+                ×
+              </button>
+            </div>
+            <div style={{ fontSize: "13px", color: "#15803d", paddingLeft: "26px" }}>
+              Swapped <strong>{swapSuccess.from}</strong> for <strong>{swapSuccess.to}</strong>
+            </div>
+            <div style={{ fontFamily: "monospace", fontSize: "11px", color: "#7a8a9a", paddingLeft: "26px", wordBreak: "break-all" }}>
+              Tx: {swapSuccess.hash}
+            </div>
+          </div>
+        )}
+
+        {/* Liquidity Success Popup */}
+        {liqSuccess && (
+          <div style={{
+            pointerEvents: "auto",
+            background: "#ffffff",
+            border: "1px solid #86efac",
+            borderLeft: "4px solid #16a34a",
+            borderRadius: "16px",
+            padding: "16px 18px",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "4px",
+            animation: "slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1)"
+          }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#166534", fontSize: "14px", fontWeight: "700" }}>
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#dcfce7", color: "#15803d", fontSize: "11px", fontWeight: "bold" }}>✓</span>
+                Liquidity Supplied Successfully
+              </div>
+              <button
+                onClick={() => setLiqSuccess(null)}
+                style={{ background: "none", border: "none", color: "#7a8a9a", cursor: "pointer", fontSize: "18px", padding: "0 4px", lineHeight: "1" }}
+              >
+                ×
+              </button>
+            </div>
+            <div style={{ fontSize: "13px", color: "#15803d", paddingLeft: "26px" }}>
+              Minted <strong>{liqSuccess.lp}</strong>
+            </div>
+            <div style={{ fontFamily: "monospace", fontSize: "11px", color: "#7a8a9a", paddingLeft: "26px", wordBreak: "break-all" }}>
+              Tx: {liqSuccess.hash}
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* HEADER SECTION */}
       <div style={{ textAlign: "center", marginBottom: "40px" }}>
         <div style={{
@@ -872,27 +960,7 @@ export function Swap({ setSection }) {
               </div>
             )}
 
-            {/* SUCCESS BANNER */}
-            {swapSuccess && (
-              <div style={{
-                background: "#f0fdf4",
-                border: "1px solid #bbf7d0",
-                borderRadius: "14px",
-                padding: "16px",
-                marginBottom: "20px",
-                textAlign: "center"
-              }}>
-                <div style={{ fontSize: "14px", fontWeight: "600", color: "#166534", marginBottom: "4px" }}>
-                  ✓ Swap Executed Successfully
-                </div>
-                <div style={{ fontSize: "13px", color: "#15803d", marginBottom: "8px" }}>
-                  Swapped <strong>{swapSuccess.from}</strong> for <strong>{swapSuccess.to}</strong>
-                </div>
-                <div style={{ fontFamily: "monospace", fontSize: "11px", color: "#166534", wordBreak: "break-all" }}>
-                  Tx: {swapSuccess.hash}
-                </div>
-              </div>
-            )}
+
 
             {/* SWAP BUTTON */}
             <button
@@ -1132,27 +1200,7 @@ export function Swap({ setSection }) {
                 </div>
               )}
 
-              {/* SUCCESS BANNER */}
-              {liqSuccess && (
-                <div style={{
-                  background: "#f0fdf4",
-                  border: "1px solid #bbf7d0",
-                  borderRadius: "14px",
-                  padding: "16px",
-                  marginBottom: "20px",
-                  textAlign: "center"
-                }}>
-                  <div style={{ fontSize: "14px", fontWeight: "600", color: "#166534", marginBottom: "4px" }}>
-                    ✓ Liquidity Supplied Successfully
-                  </div>
-                  <div style={{ fontSize: "13px", color: "#15803d", marginBottom: "6px" }}>
-                    Minted <strong>{liqSuccess.lp}</strong>
-                  </div>
-                  <div style={{ fontFamily: "monospace", fontSize: "11px", color: "#166534", wordBreak: "break-all" }}>
-                    Tx: {liqSuccess.hash}
-                  </div>
-                </div>
-              )}
+
 
               {/* SUPPLY BUTTON */}
               <button

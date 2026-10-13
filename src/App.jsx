@@ -959,6 +959,7 @@ export default function App() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body, #root { background: #ffffff; min-height: 100vh; color: #1a1a1a; }
         @keyframes shimmer { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #ffffff; }
         ::-webkit-scrollbar-thumb { background: #c8d0da; border-radius: 2px; }
