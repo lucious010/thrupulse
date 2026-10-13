@@ -685,7 +685,7 @@ function Home({ setSection, openPost }) {
           <div style={{ maxWidth: "680px", margin: "0 auto", textAlign: "center", border: "1px solid #c8d0da", borderRadius: "24px", padding: "60px 40px" }}>
             <h2 style={{ fontFamily: "DM Sans", fontSize: "30px", fontWeight: "normal", color: "#1a1a1a", letterSpacing: "-0.02em", margin: "0 0 14px" }}>Ready to build on Thru?</h2>
             <p style={{ fontFamily: "DM Sans", fontSize: "15px", color: "#7a8a9a", lineHeight: "1.7", margin: "0 0 32px" }}>Deploy smart contracts with your existing Rust or C++ toolchain. No custom compilers. No domain-specific languages. Just ship.</p>
-            <a href="https://docs.thru.org/" target="_blank" rel="noreferrer"
+            <a href="https://thru.org/docs" target="_blank" rel="noreferrer"
               style={{ display: "inline-flex", alignItems: "center", background: "#1a1a1a", borderRadius: "100px", padding: "6px 6px 6px 24px", textDecoration: "none", gap: "12px", transition: "all 0.2s" }}
               onMouseEnter={e => { e.currentTarget.style.background = "#2a2a2a"; e.currentTarget.querySelector(".arrow-box").style.transform = "translateX(4px)"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "#1a1a1a"; e.currentTarget.querySelector(".arrow-box").style.transform = "translateX(0)"; }}
@@ -881,127 +881,98 @@ function Guides() {
 
   const macSteps = (
     <>
-      <Step num="01" tag="prerequisite" title="Install Rust via rustup">
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Thru CLI is built in Rust. Install the Rust toolchain using the official installer:</p>
-        <CodeBlock label="terminal">{`curl --proto '=https' --tlsv1.2 -sSf \\\n  https://sh.rustup.rs | sh`}</CodeBlock>
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>When prompted, press <Ic>1</Ic> then Enter. Then activate the toolchain:</p>
-        <CodeBlock label="terminal">{`source $HOME/.cargo/env`}</CodeBlock>
-        <CodeBlock label="terminal">{`cargo --version`}</CodeBlock>
-        <Output label="expected output">{`cargo 1.94.1 (29ea6fb6a 2026-03-24)`}</Output>
+      <Step num="01" tag="prerequisite" title="Install Node.js">
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>The Thru CLI is distributed via npm with prebuilt native binaries for macOS (Apple Silicon arm64 & Intel x64). Ensure you have Node.js 18 or newer:</p>
+        <CodeBlock label="terminal">{`node --version\nnpm --version`}</CodeBlock>
+        <Alert type="info">If you don't have Node.js installed, download it from <Ic>nodejs.org</Ic> or install via Homebrew: <Ic>brew install node</Ic>.</Alert>
       </Step>
 
-      <Step num="02" tag="prerequisite" title="Install the Buf CLI">
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Buf is required for gRPC client support. On Apple Silicon use the <Ic>aarch64</Ic> binary:</p>
-        <CodeBlock label="terminal">{`sudo curl -sSL \\\n  "https://github.com/bufbuild/buf/releases/latest/download/buf-Linux-aarch64" \\\n  -o /usr/local/bin/buf\n\nsudo chmod +x /usr/local/bin/buf\n/usr/local/bin/buf --version`}</CodeBlock>
-        <Output label="expected output">{`1.67.0`}</Output>
-        <Alert type="warn">Using the <Ic>x86_64</Ic> binary on Apple Silicon will throw an "Exec format error". Always use the <Ic>aarch64</Ic> build on M-series Macs.</Alert>
-      </Step>
-
-      <Step num="03" tag="install" title="Install the Thru CLI">
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>First install OpenSSL via Homebrew:</p>
-        <CodeBlock label="terminal">{`brew install openssl\n\necho 'export OPENSSL_DIR=$(brew --prefix openssl)' >> ~/.zshrc\necho 'export OPENSSL_INCLUDE_DIR=$(brew --prefix openssl)/include' >> ~/.zshrc\necho 'export OPENSSL_LIB_DIR=$(brew --prefix openssl)/lib' >> ~/.zshrc\nsource ~/.zshrc`}</CodeBlock>
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Then install the Thru CLI:</p>
-        <CodeBlock label="terminal">{`cargo install thru`}</CodeBlock>
-        <Alert type="info">This compiles from source and may take 4–25 minutes. Let it run to completion.</Alert>
+      <Step num="02" tag="install" title="Install the Thru CLI">
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Install the Thru CLI globally using npm. No Rust compiler, OpenSSL setup, or Buf CLI is required:</p>
+        <CodeBlock label="terminal">{`npm i -g thru`}</CodeBlock>
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Verify the installation:</p>
         <CodeBlock label="terminal">{`thru --help`}</CodeBlock>
+        <Alert type="success">The npm package installs the native prebuilt binary in seconds without compiling from source.</Alert>
       </Step>
 
-      <Step num="04" tag="setup" title="Install the toolchain and C SDK">
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Install the RISC-V toolchain and C SDK:</p>
+      <Step num="03" tag="setup" title="Install the RISC-V Toolchain and C SDK">
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Install the official Thru RISC-V toolchain and C SDK:</p>
         <CodeBlock label="terminal">{`# Install RISC-V toolchain\nthru dev toolchain install\n\n# Install C SDK\nthru dev sdk install c`}</CodeBlock>
         <Output label="installed paths">{`~/.thru/sdk/toolchain/\n~/.thru/sdk/c/`}</Output>
       </Step>
 
-      <Step num="05" tag="network" title="Connect to the alphanet">
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Verify your CLI can reach the Thru network:</p>
+      <Step num="04" tag="network" title="Connect to the alphanet">
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Verify your CLI can reach the Thru alphanet node:</p>
         <CodeBlock label="terminal">{`thru --json getversion`}</CodeBlock>
-        <Output label="expected output">{`{\n  "getversion": {\n    "status": "success",\n    "thru-node": "0.3.0-dev"\n  }\n}`}</Output>
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>If needed, set the RPC endpoint in <Ic>~/.thru/cli/config.yaml</Ic>:</p>
-        <CodeBlock label="config.yaml">{`rpc_base_url: https://grpc.alphanet.thruput.org`}</CodeBlock>
-        <Alert type="info">Always run <Ic>thru --json getversion</Ic> before submitting transactions.</Alert>
+        <Output label="expected output">{`{\n  "getversion": {\n    "status": "success",\n    "thru-node": "0.4.1",\n    "thru-rpc": "sha-a81ff4c"\n  }\n}`}</Output>
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>The default RPC endpoint is <Ic>https://rpc.alphanet.thru.org</Ic>. If needed, configure it in <Ic>~/.thru/cli/config.yaml</Ic>:</p>
+        <CodeBlock label="config.yaml">{`rpc_base_url: https://rpc.alphanet.thru.org`}</CodeBlock>
       </Step>
 
-      <Step num="06" tag="identity" title="Generate a keypair">
+      <Step num="05" tag="identity" title="Generate a keypair">
         <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Generate a keypair to sign your transactions:</p>
         <CodeBlock label="terminal">{`thru keys generate default`}</CodeBlock>
-        <Alert type="warn">Your private key is stored as plaintext in <Ic>~/.thru/cli/config.yaml</Ic>. Never share this file.</Alert>
-        <CodeBlock label="terminal">{`thru keys generate --overwrite default`}</CodeBlock>
+        <Alert type="warn">Your private key is stored as plaintext hex in <Ic>~/.thru/cli/config.yaml</Ic>. Never share your private key.</Alert>
       </Step>
 
-      <Step num="07" tag="on-chain" title="Create your account">
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Confirm the network is up, then create your account:</p>
-        <CodeBlock label="terminal">{`# 1. Confirm network is up\nthru --json getversion\n\n# 2. Create account\nthru account create default`}</CodeBlock>
+      <Step num="06" tag="on-chain" title="Create your account">
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Create your account on-chain using fee payer state proofs:</p>
+        <CodeBlock label="terminal">{`thru account create default`}</CodeBlock>
         <Output label="expected output">{`Info: Creating account with fee payer proof...\nSuccess: State proof created successfully\nInfo: Signing transaction...\nInfo: Submitting transaction...\n  Status: success`}</Output>
-        <Alert type="warn">The alphanet may return timeout errors — this is normal. Keep retrying.</Alert>
       </Step>
 
-      <Step num="08" tag="funding" title="Claim faucet tokens">
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Withdraw up to 10,000 tokens per transaction:</p>
+      <Step num="07" tag="funding" title="Claim faucet tokens">
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Withdraw up to 10,000 tokens per transaction from the faucet:</p>
         <CodeBlock label="terminal">{`thru faucet withdraw default 10000`}</CodeBlock>
         <Output label="expected output">{`Withdrew 10000 tokens from faucet to default`}</Output>
         <CodeBlock label="terminal">{`thru getbalance default`}</CodeBlock>
-        <Alert type="success">You are fully set up on the Thru alphanet. You can now deploy programs and interact with the RISC-V chain.</Alert>
+        <Alert type="success">You are fully set up on the Thru alphanet! You can now compile RISC-V programs, deploy contracts, or claim tokens via our Faucet page.</Alert>
       </Step>
     </>
   );
 
   const winSteps = (
     <>
-      <Step num="01" tag="prerequisite" title="Install Rust via rustup">
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Download the Windows installer from <Ic>rustup.rs</Ic> and run <Ic>rustup-init.exe</Ic>.</p>
-        <Alert type="info">During setup you may be prompted to install Visual Studio C++ Build Tools. Accept this — it is required to compile Rust programs on Windows.</Alert>
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>After installation, open a new PowerShell window and verify:</p>
-        <CodeBlock label="powershell">{`cargo --version`}</CodeBlock>
-        <Output label="expected output">{`cargo 1.94.1 (29ea6fb6a 2026-03-24)`}</Output>
+      <Step num="01" tag="prerequisite" title="Install Node.js">
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Download and run the Windows installer (v18 or newer) from <Ic>nodejs.org</Ic>.</p>
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>After installation, open PowerShell and verify:</p>
+        <CodeBlock label="powershell">{`node --version\nnpm --version`}</CodeBlock>
       </Step>
 
-      <Step num="02" tag="prerequisite" title="Install the Buf CLI">
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Via Scoop (recommended):</p>
-        <CodeBlock label="powershell">{`Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser\nInvoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression\n\nscoop install buf`}</CodeBlock>
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Or download manually (run as administrator):</p>
-        <CodeBlock label="powershell (administrator)">{`Invoke-WebRequest \`\n  -Uri "https://github.com/bufbuild/buf/releases/latest/download/buf-Windows-x86_64.exe" \`\n  -OutFile "C:\\Windows\\System32\\buf.exe"`}</CodeBlock>
-        <CodeBlock label="powershell">{`buf --version`}</CodeBlock>
-        <Output label="expected output">{`1.67.0`}</Output>
-      </Step>
-
-      <Step num="03" tag="install" title="Install the Thru CLI">
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>First install OpenSSL via vcpkg:</p>
-        <CodeBlock label="powershell">{`git clone https://github.com/microsoft/vcpkg C:\\vcpkg\nC:\\vcpkg\\bootstrap-vcpkg.bat\n\nC:\\vcpkg\\vcpkg install openssl:x64-windows-static\n\n$env:OPENSSL_DIR = "C:\\vcpkg\\installed\\x64-windows-static"\n$env:OPENSSL_STATIC = "1"`}</CodeBlock>
-        <CodeBlock label="powershell">{`cargo install thru`}</CodeBlock>
-        <Alert type="info">This compiles from source and may take 10–30 minutes on Windows. Do not close the terminal.</Alert>
+      <Step num="02" tag="install" title="Install the Thru CLI">
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Install the Thru CLI globally using npm. A prebuilt Windows binary is installed automatically:</p>
+        <CodeBlock label="powershell">{`npm i -g thru`}</CodeBlock>
         <CodeBlock label="powershell">{`thru --help`}</CodeBlock>
+        <Alert type="success">No Visual Studio C++ compilers, vcpkg, or OpenSSL build setup required!</Alert>
       </Step>
 
-      <Step num="04" tag="setup" title="Install the toolchain and C SDK">
+      <Step num="03" tag="setup" title="Install the RISC-V Toolchain and C SDK">
         <CodeBlock label="powershell">{`thru dev toolchain install\nthru dev sdk install c`}</CodeBlock>
         <Output label="installed paths">{`%USERPROFILE%\\.thru\\sdk\\toolchain\\\n%USERPROFILE%\\.thru\\sdk\\c\\`}</Output>
       </Step>
 
-      <Step num="05" tag="network" title="Connect to the alphanet">
+      <Step num="04" tag="network" title="Connect to the alphanet">
         <CodeBlock label="powershell">{`thru --json getversion`}</CodeBlock>
-        <Output label="expected output">{`{\n  "getversion": {\n    "status": "success",\n    "thru-node": "0.3.0-dev"\n  }\n}`}</Output>
-        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>If needed, edit <Ic>%USERPROFILE%\.thru\cli\config.yaml</Ic>:</p>
-        <CodeBlock label="config.yaml">{`rpc_base_url: https://grpc.alphanet.thruput.org`}</CodeBlock>
-        <Alert type="info">Always confirm <Ic>getversion</Ic> returns success before submitting any transactions.</Alert>
+        <Output label="expected output">{`{\n  "getversion": {\n    "status": "success",\n    "thru-node": "0.4.1",\n    "thru-rpc": "sha-a81ff4c"\n  }\n}`}</Output>
+        <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>The default RPC URL is <Ic>https://rpc.alphanet.thru.org</Ic>. If needed, edit <Ic>%USERPROFILE%\.thru\cli\config.yaml</Ic>:</p>
+        <CodeBlock label="config.yaml">{`rpc_base_url: https://rpc.alphanet.thru.org`}</CodeBlock>
       </Step>
 
-      <Step num="06" tag="identity" title="Generate a keypair">
+      <Step num="05" tag="identity" title="Generate a keypair">
         <CodeBlock label="powershell">{`thru keys generate default`}</CodeBlock>
-        <Alert type="warn">Your private key is stored as plaintext in <Ic>%USERPROFILE%\.thru\cli\config.yaml</Ic>. Never share this file.</Alert>
-        <CodeBlock label="powershell">{`thru keys generate --overwrite default`}</CodeBlock>
+        <Alert type="warn">Your private key is stored as plaintext in <Ic>%USERPROFILE%\.thru\cli\config.yaml</Ic>. Keep your files safe.</Alert>
       </Step>
 
-      <Step num="07" tag="on-chain" title="Create your account">
-        <CodeBlock label="powershell">{`# 1. Confirm network is up\nthru --json getversion\n\n# 2. Create account\nthru account create default`}</CodeBlock>
+      <Step num="06" tag="on-chain" title="Create your account">
+        <CodeBlock label="powershell">{`thru account create default`}</CodeBlock>
         <Output label="expected output">{`Info: Creating account with fee payer proof...\nSuccess: State proof created successfully\n  Status: success`}</Output>
-        <Alert type="warn">Timeout errors are common on the alphanet — keep retrying.</Alert>
       </Step>
 
-      <Step num="08" tag="funding" title="Claim faucet tokens">
+      <Step num="07" tag="funding" title="Claim faucet tokens">
         <CodeBlock label="powershell">{`thru faucet withdraw default 10000`}</CodeBlock>
         <Output label="expected output">{`Withdrew 10000 tokens from faucet to default`}</Output>
         <CodeBlock label="powershell">{`thru getbalance default`}</CodeBlock>
-        <Alert type="success">You are fully set up on the Thru alphanet. You can now deploy programs and interact with the RISC-V chain.</Alert>
+        <Alert type="success">You are fully set up on the Thru alphanet on Windows!</Alert>
       </Step>
     </>
   );
@@ -1056,7 +1027,7 @@ function Guides() {
         <div style={{ marginTop: "72px", background: "#fff", border: "1px solid #e4e9ef", borderRadius: "20px", padding: "40px" }}>
           <h3 style={{ fontFamily: "DM Sans", fontSize: "20px", fontWeight: "600", marginBottom: "24px", color: "#1a1a1a", letterSpacing: "-0.02em" }}>Setup checklist</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {["Rust & Cargo installed via rustup", "Buf CLI installed (correct architecture)", "Thru CLI v0.2.14 installed via cargo", "RISC-V toolchain installed", "C SDK installed", "Connected to alphanet RPC endpoint", "Keypair generated and stored locally", "On-chain account created", "Faucet tokens claimed"].map(item => (
+            {["Node.js 18+ installed", "Thru CLI v0.4+ installed via npm", "RISC-V toolchain installed (thru dev toolchain install)", "C SDK installed (thru dev sdk install c)", "Connected to alphanet RPC (rpc.alphanet.thru.org)", "Keypair generated and stored locally", "On-chain account created with state proofs", "Faucet tokens claimed (thru faucet withdraw)"].map(item => (
               <div key={item} style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "14px", color: "#7a8a9a", fontFamily: "DM Sans" }}>
                 <div style={{ width: "20px", height: "20px", borderRadius: "6px", background: "#edfaf4", border: "1px solid #9be5c0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "11px", color: "#065f46" }}>✓</div>
                 {item}
@@ -1069,7 +1040,7 @@ function Guides() {
         <div style={{ marginTop: "24px", padding: "28px 32px", background: "#ffffff", border: "1px solid #c8d0da", borderRadius: "20px", borderLeft: "3px solid #1a1a1a" }}>
           <h4 style={{ fontFamily: "DM Sans", fontSize: "16px", fontWeight: "600", marginBottom: "8px", color: "#1a1a1a" }}>Keeping your CLI up to date</h4>
           <p style={{ fontSize: "14px", color: "#7a8a9a", lineHeight: "1.7", marginBottom: "12px", fontFamily: "DM Sans" }}>When a new version is released, update with:</p>
-          <CodeBlock label="terminal / powershell">{`cargo install thru --force`}</CodeBlock>
+          <CodeBlock label="terminal / powershell">{`npm i -g thru@latest`}</CodeBlock>
         </div>
         </>)}
 
@@ -1097,25 +1068,33 @@ my-token/examples/hello_world.c`}</Output>
 
             <Step num="03" tag="code" title="Write the token program">
               <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Open <Ic>examples/hello_world.c</Ic> and replace the contents with a simple token mint program:</p>
-              <CodeBlock label="examples/hello_world.c">{`#include <tn_sdk.h>
+              <CodeBlock label="examples/hello_world.c">{`#include <stdint.h>
+#include "thru-sdk/c/tn_sdk.h"
 
-void entrypoint(const uint8_t *input, uint64_t input_len) {
-    // Read instruction data
-    if (input_len < 8) {
-        tn_return_error(-1);
-        return;
+TSDK_ENTRYPOINT_FN void start(void) {
+    // Get transaction context
+    tsdk_txn_t const *txn = tsdk_get_txn();
+
+    // Read instruction data and size
+    uchar const *data = tsdk_txn_get_instr_data(txn);
+    ushort data_sz    = tsdk_txn_get_instr_data_sz(txn);
+
+    // Validate minimum instruction payload (uint64 amount = 8 bytes)
+    if (data_sz < 8) {
+        tsdk_printf("Error: expected at least 8 bytes for mint amount\n");
+        tsdk_revert(1);
     }
 
-    // Read amount from first 8 bytes
-    uint64_t amount = *(uint64_t *)input;
+    // Safely load amount from instruction data (little-endian)
+    uint64_t amount = TSDK_LOAD(uint64_t, data);
 
-    // Log the mint amount
-    tn_log_uint64(amount);
+    // Log the mint amount to the VM execution log
+    tsdk_printf("Minting token amount: %llu\n", (unsigned long long)amount);
 
     // Return success
-    tn_return_success(NULL, 0);
+    tsdk_return(TSDK_SUCCESS);
 }`}</CodeBlock>
-              <Alert type="info">This is a minimal example. A full token program would manage balances in state accounts. See the Thru SDK docs at docs.thru.org for advanced usage.</Alert>
+              <Alert type="info">This is a minimal example using modern SDK macros like <Ic>TSDK_ENTRYPOINT_FN</Ic> and <Ic>TSDK_LOAD</Ic>. A production token program would manage balances in state accounts. See the Thru SDK docs at thru.org/docs for state account patterns.</Alert>
             </Step>
 
             <Step num="04" tag="build" title="Build the program">
@@ -1126,14 +1105,14 @@ void entrypoint(const uint8_t *input, uint64_t input_len) {
             </Step>
 
             <Step num="05" tag="deploy" title="Deploy to the alphanet">
-              <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>First verify the network is up, then deploy your program:</p>
+              <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>First verify the network is up, then deploy your program with a unique seed:</p>
               <CodeBlock label="terminal">{`thru --json getversion`}</CodeBlock>
               <p style={{ color: "#7a8a9a", fontSize: "15px", lineHeight: "1.7", marginBottom: "16px" }}>Once you see a success response, create a managed program:</p>
-              <CodeBlock label="terminal">{`thru program create default build/thruvm/bin/hello_world_c.bin`}</CodeBlock>
+              <CodeBlock label="terminal">{`thru program create default_token build/thruvm/bin/hello_world_c.bin`}</CodeBlock>
               <Output label="expected output">{`Success: ✓ Managed program created successfully
 Info: Meta account: taYZCp1f...
 Info: Program account: taN7kZOQ...`}</Output>
-              <Alert type="info">Save your <Ic>Program account</Ic> address — you will need it to execute the program.</Alert>
+              <Alert type="info">Save your <Ic>Program account</Ic> address — you will need it to execute the program. Using a unique seed like <Ic>default_token</Ic> avoids meta account conflicts.</Alert>
             </Step>
 
             <Step num="06" tag="execute" title="Execute your program">
@@ -1156,7 +1135,7 @@ Info: Program account: taN7kZOQ...`}</Output>
           {/* Tip box */}
           <div style={{ marginTop: "48px", padding: "28px 32px", background: "#ffffff", border: "1px solid #c8d0da", borderRadius: "20px", borderLeft: "3px solid #C0392B" }}>
             <h4 style={{ fontFamily: "DM Sans", fontSize: "16px", fontWeight: "600", marginBottom: "8px", color: "#1a1a1a" }}>Next steps</h4>
-            <p style={{ fontSize: "14px", color: "#7a8a9a", lineHeight: "1.7", fontFamily: "DM Sans" }}>Explore the full Thru C SDK documentation at <a href="https://docs.thru.org" target="_blank" rel="noreferrer" style={{ color: "#C0392B", textDecoration: "none" }}>docs.thru.org</a> to learn about state accounts, cross-program calls, and advanced token logic.</p>
+            <p style={{ fontSize: "14px", color: "#7a8a9a", lineHeight: "1.7", fontFamily: "DM Sans" }}>Explore the full Thru C SDK documentation at <a href="https://thru.org/docs" target="_blank" rel="noreferrer" style={{ color: "#C0392B", textDecoration: "none" }}>thru.org/docs</a> to learn about state accounts, cross-program calls, and advanced token logic.</p>
           </div>
         </>)}
 
@@ -1282,7 +1261,7 @@ VM Error: 0 (TN_RUNTIME_TXN_EXECUTE_SUCCESS)`}</Output>
           {/* Tip box */}
           <div style={{ marginTop: "24px", padding: "28px 32px", background: "#ffffff", border: "1px solid #c8d0da", borderRadius: "20px", borderLeft: "3px solid #C0392B" }}>
             <h4 style={{ fontFamily: "DM Sans", fontSize: "16px", fontWeight: "600", marginBottom: "8px", color: "#1a1a1a" }}>Next steps</h4>
-            <p style={{ fontSize: "14px", color: "#7a8a9a", lineHeight: "1.7", fontFamily: "DM Sans" }}>Try extending the calculator to support subtraction, multiplication, or division by reading an operation byte from the instruction data. See the full SDK docs at <a href="https://docs.thru.org" target="_blank" rel="noreferrer" style={{ color: "#C0392B", textDecoration: "none" }}>docs.thru.org</a>.</p>
+            <p style={{ fontSize: "14px", color: "#7a8a9a", lineHeight: "1.7", fontFamily: "DM Sans" }}>Try extending the calculator to support subtraction, multiplication, or division by reading an operation byte from the instruction data. See the full SDK docs at <a href="https://thru.org/docs" target="_blank" rel="noreferrer" style={{ color: "#C0392B", textDecoration: "none" }}>thru.org/docs</a>.</p>
           </div>
         </>)}
 
