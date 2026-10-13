@@ -371,18 +371,18 @@ function Home({ setSection }) {
       <div style={{ padding: "80px 48px", background: "#ffffff" }}>
         <Reveal>
           <div style={{ maxWidth: "1100px", margin: "0 auto", background: "#1a1a1a", borderRadius: "24px", padding: "52px 56px", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "relative", zIndex: 1, maxWidth: "680px" }}>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(255,255,255,0.1)", padding: "4px 12px", borderRadius: "100px", fontSize: "11px", fontWeight: "600", color: "#ffffff", marginBottom: "16px", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+            <div style={{ position: "relative", zIndex: 1, maxWidth: "680px", display: "flex", flexDirection: "column", alignItems: "flex-start", textAlign: "left" }}>
+              <div style={{ display: "inline-flex", alignItems: "center", alignSelf: "flex-start", gap: "8px", background: "rgba(255,255,255,0.1)", padding: "4px 12px", borderRadius: "100px", fontSize: "11px", fontWeight: "600", color: "#ffffff", margin: "0 0 16px 0", textTransform: "uppercase", letterSpacing: "0.1em" }}>
                 <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#C0392B" }} />
                 Instant Liquidity & DEX
               </div>
-              <h2 style={{ fontFamily: "DM Sans", fontSize: "clamp(26px, 3.5vw, 40px)", fontWeight: "normal", color: "#ffffff", margin: "0 0 16px", letterSpacing: "-0.02em", lineHeight: "1.2" }}>
+              <h2 style={{ fontFamily: "DM Sans", fontSize: "clamp(26px, 3.5vw, 40px)", fontWeight: "normal", color: "#ffffff", margin: "0 0 16px", letterSpacing: "-0.02em", lineHeight: "1.2", textAlign: "left" }}>
                 Swap tokens & earn yield on ThruVM.
               </h2>
-              <p style={{ fontFamily: "DM Sans", fontSize: "15px", color: "#a0aec0", lineHeight: "1.7", margin: "0 0 32px" }}>
+              <p style={{ fontFamily: "DM Sans", fontSize: "15px", color: "#a0aec0", lineHeight: "1.7", margin: "0 0 32px", textAlign: "left" }}>
                 Trade THRU and native assets at sub-second finality with low slippage. Supply liquidity to AMM pools to earn continuous trading rewards.
               </p>
-              <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", justifyContent: "flex-start" }}>
                 <button
                   onClick={() => setSection("swap")}
                   style={{
