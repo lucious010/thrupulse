@@ -167,18 +167,17 @@ export function Faucet({ setSection }) {
         // Automatically credit the user's local test wallet balances so Swap & Liquidity immediately reflects it!
         try {
           const currentBalances = JSON.parse(localStorage.getItem("thrupulse_balances") || "{}");
-          const oldVal = Number(currentBalances[selectedToken] !== undefined ? currentBalances[selectedToken] : (
-            selectedToken === "THRU" ? 10000 :
-            selectedToken === "tUSD" ? 4500 :
-            selectedToken === "tETH" ? 2.5 :
-            selectedToken === "tSOL" ? 35 :
-            selectedToken === "tBTC" ? 0.15 : 0
-          ));
+          const oldVal = Number(currentBalances[selectedToken] !== undefined ? currentBalances[selectedToken] : 0);
           const updatedBalances = {
-            ...currentBalances,
+            THRU: Number(currentBalances.THRU || 0),
+            tUSD: Number(currentBalances.tUSD || 0),
+            tETH: Number(currentBalances.tETH || 0),
+            tSOL: Number(currentBalances.tSOL || 0),
+            tBTC: Number(currentBalances.tBTC || 0),
             [selectedToken]: Number((oldVal + Number(data.amount)).toFixed(6))
           };
           localStorage.setItem("thrupulse_balances", JSON.stringify(updatedBalances));
+          localStorage.setItem("thrupulse_balances_v", "2");
           window.dispatchEvent(new Event("thrupulse_balance_updated"));
         } catch (_) {}
 
@@ -193,6 +192,15 @@ export function Faucet({ setSection }) {
 
   function applyNewWallet(data) {
     setAddress(data.pubkey);
+    // Brand new generated wallet starts clean with 0 balances
+    try {
+      const zeroBalances = { THRU: 0, tUSD: 0, tETH: 0, tSOL: 0, tBTC: 0 };
+      localStorage.setItem("thrupulse_balances", JSON.stringify(zeroBalances));
+      localStorage.setItem("thrupulse_balances_v", "2");
+      localStorage.setItem("thrupulse_positions", JSON.stringify([]));
+      localStorage.setItem("thrupulse_positions_v", "2");
+      window.dispatchEvent(new Event("thrupulse_balance_updated"));
+    } catch (_) {}
     triggerWalletDownload(data);
     setDownloadToast({
       title: "Private keys and others downloaded already",

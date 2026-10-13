@@ -10,11 +10,11 @@ const TOKENS = [
 ];
 
 const INITIAL_BALANCES = {
-  THRU: 10000,
-  tUSD: 4500,
-  tETH: 2.5,
-  tSOL: 35.0,
-  tBTC: 0.15
+  THRU: 0,
+  tUSD: 0,
+  tETH: 0,
+  tSOL: 0,
+  tBTC: 0
 };
 
 const INITIAL_POOLS = [
@@ -23,16 +23,20 @@ const INITIAL_POOLS = [
   { id: "tUSD-tETH", tokenA: "tUSD", tokenB: "tETH", reserveA: 1800000, reserveB: 526.3, apr: "19.8%", tvl: "$3,600,000", vol24h: "$950,400" },
 ];
 
-const INITIAL_POSITIONS = [
-  { id: "pos-1", poolId: "THRU-tUSD", tokenA: "THRU", tokenB: "tUSD", lpTokens: 420.5, share: "0.12%", pooledA: 4200, pooledB: 1890, earnedFees: "$42.80" }
-];
+const INITIAL_POSITIONS = [];
 
 export function Swap({ setSection }) {
   const [mode, setMode] = useState("swap"); // "swap" | "liquidity"
   
-  // Balances
+  // Balances - fresh test wallets start strictly from 0
   const [balances, setBalances] = useState(() => {
     try {
+      const v = localStorage.getItem("thrupulse_balances_v");
+      if (v !== "2") {
+        localStorage.setItem("thrupulse_balances_v", "2");
+        localStorage.setItem("thrupulse_balances", JSON.stringify(INITIAL_BALANCES));
+        return INITIAL_BALANCES;
+      }
       const saved = localStorage.getItem("thrupulse_balances");
       return saved ? JSON.parse(saved) : INITIAL_BALANCES;
     } catch {
@@ -110,6 +114,12 @@ export function Swap({ setSection }) {
   const [liqError, setLiqError] = useState(null);
   const [myPositions, setMyPositions] = useState(() => {
     try {
+      const v = localStorage.getItem("thrupulse_positions_v");
+      if (v !== "2") {
+        localStorage.setItem("thrupulse_positions_v", "2");
+        localStorage.setItem("thrupulse_positions", JSON.stringify(INITIAL_POSITIONS));
+        return INITIAL_POSITIONS;
+      }
       const saved = localStorage.getItem("thrupulse_positions");
       return saved ? JSON.parse(saved) : INITIAL_POSITIONS;
     } catch {
@@ -314,9 +324,14 @@ export function Swap({ setSection }) {
     setMyPositions(myPositions.filter(p => p.id !== posId));
   };
 
-  // Reset balances to default test amounts
+  // Reset balances to default test amounts (0)
   const handleResetBalances = () => {
     setBalances(INITIAL_BALANCES);
+    localStorage.setItem("thrupulse_balances", JSON.stringify(INITIAL_BALANCES));
+    localStorage.setItem("thrupulse_balances_v", "2");
+    setMyPositions(INITIAL_POSITIONS);
+    localStorage.setItem("thrupulse_positions", JSON.stringify(INITIAL_POSITIONS));
+    localStorage.setItem("thrupulse_positions_v", "2");
     setSwapSuccess(null);
     setSwapError(null);
   };
