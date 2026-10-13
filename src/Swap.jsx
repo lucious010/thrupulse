@@ -541,13 +541,15 @@ export function Swap({ setSection }) {
       {/* SWAP CARD MODE */}
       {/* ========================================================================= */}
       {mode === "swap" && (
-        <div style={{ maxWidth: "480px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "480px", margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
           <div style={{
             background: "#ffffff",
             border: "1px solid #c8d0da",
             borderRadius: "24px",
-            padding: "32px",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.03)"
+            padding: "28px 24px",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.03)",
+            boxSizing: "border-box",
+            width: "100%"
           }}>
             
             {/* Header + Settings */}
@@ -624,8 +626,10 @@ export function Swap({ setSection }) {
               background: "#f7f9fa",
               border: "1px solid #e4e9ef",
               borderRadius: "18px",
-              padding: "18px 20px",
-              marginBottom: "10px"
+              padding: "16px 18px",
+              marginBottom: "10px",
+              boxSizing: "border-box",
+              width: "100%"
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                 <span style={{ fontSize: "12px", color: "#7a8a9a", fontWeight: "500" }}>You Pay</span>
@@ -633,17 +637,25 @@ export function Swap({ setSection }) {
                   Balance: <strong>{(balances[fromToken] || 0).toLocaleString()}</strong>
                 </span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", width: "100%", boxSizing: "border-box" }}>
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="decimal"
                   placeholder="0.0"
                   value={fromAmount}
-                  onChange={e => handleFromChange(e.target.value)}
+                  onChange={e => {
+                    const val = e.target.value.replace(/,/g, ".");
+                    if (val === "" || /^[0-9]*\.?[0-9]*$/.test(val)) {
+                      handleFromChange(val);
+                    }
+                  }}
                   style={{
-                    flex: 1,
+                    flex: "1 1 0%",
+                    minWidth: 0,
+                    width: "100%",
                     background: "none",
                     border: "none",
-                    fontSize: "26px",
+                    fontSize: "24px",
                     fontWeight: "600",
                     color: "#1a1a1a",
                     outline: "none",
@@ -662,7 +674,8 @@ export function Swap({ setSection }) {
                     fontSize: "11px",
                     fontWeight: "600",
                     color: "#C0392B",
-                    cursor: "pointer"
+                    cursor: "pointer",
+                    flexShrink: 0
                   }}
                 >
                   MAX
@@ -672,13 +685,14 @@ export function Swap({ setSection }) {
                 <div style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: "8px",
+                  gap: "6px",
                   background: "#ffffff",
                   border: "1px solid #c8d0da",
                   borderRadius: "12px",
-                  padding: "6px 10px"
+                  padding: "5px 10px",
+                  flexShrink: 0
                 }}>
-                  <TokenIcon symbol={fromToken} size={22} />
+                  <TokenIcon symbol={fromToken} size={20} />
                   <select
                     value={fromToken}
                     onChange={e => {
@@ -696,7 +710,8 @@ export function Swap({ setSection }) {
                       color: "#1a1a1a",
                       cursor: "pointer",
                       outline: "none",
-                      fontFamily: "DM Sans, sans-serif"
+                      fontFamily: "DM Sans, sans-serif",
+                      paddingRight: "2px"
                     }}
                   >
                     {TOKENS.map(t => (
@@ -740,9 +755,11 @@ export function Swap({ setSection }) {
               background: "#f7f9fa",
               border: "1px solid #e4e9ef",
               borderRadius: "18px",
-              padding: "18px 20px",
+              padding: "16px 18px",
               marginTop: "10px",
-              marginBottom: "20px"
+              marginBottom: "20px",
+              boxSizing: "border-box",
+              width: "100%"
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                 <span style={{ fontSize: "12px", color: "#7a8a9a", fontWeight: "500" }}>You Receive</span>
@@ -750,17 +767,19 @@ export function Swap({ setSection }) {
                   Balance: <strong>{(balances[toToken] || 0).toLocaleString()}</strong>
                 </span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", width: "100%", boxSizing: "border-box" }}>
                 <input
                   type="text"
                   placeholder="0.0"
                   readOnly
                   value={toAmount}
                   style={{
-                    flex: 1,
+                    flex: "1 1 0%",
+                    minWidth: 0,
+                    width: "100%",
                     background: "none",
                     border: "none",
-                    fontSize: "26px",
+                    fontSize: "24px",
                     fontWeight: "600",
                     color: "#1a1a1a",
                     outline: "none",
@@ -772,13 +791,14 @@ export function Swap({ setSection }) {
                 <div style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: "8px",
+                  gap: "6px",
                   background: "#ffffff",
                   border: "1px solid #c8d0da",
                   borderRadius: "12px",
-                  padding: "6px 10px"
+                  padding: "5px 10px",
+                  flexShrink: 0
                 }}>
-                  <TokenIcon symbol={toToken} size={22} />
+                  <TokenIcon symbol={toToken} size={20} />
                   <select
                     value={toToken}
                     onChange={e => {
@@ -796,7 +816,8 @@ export function Swap({ setSection }) {
                       color: "#1a1a1a",
                       cursor: "pointer",
                       outline: "none",
-                      fontFamily: "DM Sans, sans-serif"
+                      fontFamily: "DM Sans, sans-serif",
+                      paddingRight: "2px"
                     }}
                   >
                     {TOKENS.map(t => (
