@@ -12,19 +12,19 @@ const REFILL_AMOUNT = 10000;
 
 // Multi-Token Treasury Reserves
 const TREASURY_RESERVES = {
-  THRU: 177907,
-  tSOL: 25000,
-  tUSD: 1500000,
-  tETH: 500,
-  tBTC: 50
+  THRU: 3317002,
+  tSOL: 100000,
+  tUSD: 10000000,
+  tETH: 2500,
+  tBTC: 250
 };
 
 const DEFAULT_DISPENSE = {
-  THRU: 100,
-  tSOL: 5,
-  tUSD: 250,
+  THRU: 1000,
+  tSOL: 25,
+  tUSD: 1000,
   tETH: 0.5,
-  tBTC: 0.05
+  tBTC: 0.1
 };
 
 async function runThruCommand(args) {
@@ -108,7 +108,7 @@ export async function claimFromBank(recipient, amount, token = 'THRU', clientIp 
 
   // Handle native THRU on-chain transfer
   if (cleanToken === 'THRU') {
-    const cappedAmount = Math.min(Math.max(numAmount, 10), 1000);
+    const cappedAmount = Math.min(Math.max(numAmount, 10), 10000);
     const res = await runThruCommand(['transfer', BANK_ACCOUNT, cleanRecipient, String(cappedAmount)]);
 
     if (!res.success) {

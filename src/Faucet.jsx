@@ -6,31 +6,31 @@ const TOKENS_CONFIG = {
     symbol: "THRU",
     name: "Thru Native",
     color: "#C0392B",
-    amounts: [50, 100, 250, 500],
-    defaultAmt: 100,
+    amounts: [500, 1000, 5000, 10000],
+    defaultAmt: 1000,
     tag: "Native Gas & Governance"
   },
   tSOL: {
     symbol: "tSOL",
     name: "Thru Solana",
     color: "#7c3aed",
-    amounts: [2, 5, 10, 25],
-    defaultAmt: 5,
+    amounts: [5, 25, 50, 100],
+    defaultAmt: 25,
     tag: "Ecosystem Token"
   },
   tUSD: {
     symbol: "tUSD",
     name: "Thru USD",
     color: "#059669",
-    amounts: [100, 250, 500, 1000],
-    defaultAmt: 250,
+    amounts: [500, 1000, 5000, 10000],
+    defaultAmt: 1000,
     tag: "Stablecoin Peg"
   },
   tETH: {
     symbol: "tETH",
     name: "Thru Ether",
     color: "#4f46e5",
-    amounts: [0.1, 0.5, 1.0, 2.5],
+    amounts: [0.25, 0.5, 1.0, 2.5],
     defaultAmt: 0.5,
     tag: "Ecosystem Token"
   },
@@ -38,8 +38,8 @@ const TOKENS_CONFIG = {
     symbol: "tBTC",
     name: "Thru Bitcoin",
     color: "#d97706",
-    amounts: [0.01, 0.05, 0.1, 0.25],
-    defaultAmt: 0.05,
+    amounts: [0.05, 0.1, 0.25, 0.5],
+    defaultAmt: 0.1,
     tag: "Ecosystem Token"
   }
 };
@@ -48,42 +48,61 @@ export function Faucet({ setSection }) {
   const [selectedToken, setSelectedToken] = useState("THRU");
   const [faucetInfo, setFaucetInfo] = useState(() => {
     const defaultReserves = {
-      THRU: 177907,
-      tSOL: 25000,
-      tUSD: 1500000,
-      tETH: 500,
-      tBTC: 50
+      THRU: 3317002,
+      tSOL: 100000,
+      tUSD: 10000000,
+      tETH: 2500,
+      tBTC: 250
     };
     try {
+      const v = localStorage.getItem("thrupulse_treasury_reserves_v");
       const saved = localStorage.getItem("thrupulse_treasury_reserves");
-      const parsed = saved ? JSON.parse(saved) : null;
+      if (v !== "4" || !saved) {
+        localStorage.setItem("thrupulse_treasury_reserves_v", "4");
+        localStorage.setItem("thrupulse_treasury_reserves", JSON.stringify(defaultReserves));
+        return {
+          status: "online",
+          balance: defaultReserves.THRU,
+          pubkey: "taMcFOLfiSVdjeWZPGR5vNbbLbHWxrF409XUxNVjiMfmMj",
+          reserves: defaultReserves,
+          dispenseAmounts: {
+            THRU: 1000,
+            tSOL: 25,
+            tUSD: 1000,
+            tETH: 0.5,
+            tBTC: 0.1
+          },
+          cooldownMinutes: 3
+        };
+      }
+      const parsed = JSON.parse(saved);
       const reserves = parsed || defaultReserves;
       return {
         status: "online",
         balance: reserves.THRU,
-        pubkey: "",
+        pubkey: "taMcFOLfiSVdjeWZPGR5vNbbLbHWxrF409XUxNVjiMfmMj",
         reserves,
         dispenseAmounts: {
-          THRU: 100,
-          tSOL: 5,
-          tUSD: 250,
+          THRU: 1000,
+          tSOL: 25,
+          tUSD: 1000,
           tETH: 0.5,
-          tBTC: 0.05
+          tBTC: 0.1
         },
         cooldownMinutes: 3
       };
     } catch {
       return {
         status: "online",
-        balance: 177907,
-        pubkey: "",
+        balance: 3317002,
+        pubkey: "taMcFOLfiSVdjeWZPGR5vNbbLbHWxrF409XUxNVjiMfmMj",
         reserves: defaultReserves,
         dispenseAmounts: {
-          THRU: 100,
-          tSOL: 5,
-          tUSD: 250,
+          THRU: 1000,
+          tSOL: 25,
+          tUSD: 1000,
           tETH: 0.5,
-          tBTC: 0.05
+          tBTC: 0.1
         },
         cooldownMinutes: 3
       };
@@ -136,7 +155,7 @@ export function Faucet({ setSection }) {
   // Update default amount when switching tokens
   const handleTokenChange = (tokenKey) => {
     setSelectedToken(tokenKey);
-    setSelectedAmount(TOKENS_CONFIG[tokenKey]?.defaultAmt || 100);
+    setSelectedAmount(TOKENS_CONFIG[tokenKey]?.defaultAmt || 1000);
     setError(null);
     setResult(null);
   };
@@ -150,8 +169,11 @@ export function Faucet({ setSection }) {
         setFaucetInfo(prev => {
           let savedLocal = null;
           try {
-            const s = localStorage.getItem("thrupulse_treasury_reserves");
-            if (s) savedLocal = JSON.parse(s);
+            const v = localStorage.getItem("thrupulse_treasury_reserves_v");
+            if (v === "4") {
+              const s = localStorage.getItem("thrupulse_treasury_reserves");
+              if (s) savedLocal = JSON.parse(s);
+            }
           } catch (_) {}
           const mergedReserves = {
             ...prev.reserves,
@@ -228,6 +250,7 @@ export function Faucet({ setSection }) {
           [selectedToken]: newTokenRes
         };
         try {
+          localStorage.setItem("thrupulse_treasury_reserves_v", "4");
           localStorage.setItem("thrupulse_treasury_reserves", JSON.stringify(updatedRes));
         } catch (_) {}
         return {

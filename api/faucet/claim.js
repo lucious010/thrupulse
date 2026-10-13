@@ -13,7 +13,9 @@ export default function handler(req, res) {
     return res.status(400).json({ success: false, error: 'Recipient address is required.' });
   }
 
-  const numAmount = Number(amount) || 100;
+  const defaultAmt = cleanToken === 'tBTC' ? 0.1 : (cleanToken === 'tETH' ? 0.5 : (cleanToken === 'tSOL' ? 25 : 1000));
+  const rawAmt = Number(amount);
+  const numAmount = isNaN(rawAmt) || rawAmt <= 0 ? defaultAmt : Math.min(rawAmt, 10000);
   const updatedReserves = deductReserve(cleanToken, numAmount);
   const sig = `tx_thruvm_betanet_${cleanRecipient.slice(0, 8)}_${Math.random().toString(36).substring(2, 12)}`;
 

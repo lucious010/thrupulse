@@ -1,9 +1,9 @@
 export const RESERVES = {
-  THRU: 177907,
-  tSOL: 25000,
-  tUSD: 1500000,
-  tETH: 500,
-  tBTC: 50
+  THRU: 3317002,
+  tSOL: 100000,
+  tUSD: 10000000,
+  tETH: 2500,
+  tBTC: 250
 };
 
 export function deductReserve(token, amount) {

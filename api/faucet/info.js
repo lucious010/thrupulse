@@ -6,15 +6,15 @@ export default function handler(req, res) {
   return res.status(200).json({
     status: 'online',
     bankAccount: 'default',
-    pubkey: 'taCommunityTreasuryBetaNetVault111111111111',
+    pubkey: 'taMcFOLfiSVdjeWZPGR5vNbbLbHWxrF409XUxNVjiMfmMj',
     balance: RESERVES.THRU,
     reserves: { ...RESERVES },
     dispenseAmounts: {
-      THRU: 100,
-      tSOL: 5,
-      tUSD: 250,
+      THRU: 1000,
+      tSOL: 25,
+      tUSD: 1000,
       tETH: 0.5,
-      tBTC: 0.05
+      tBTC: 0.1
     },
     cooldownMinutes: 3
   });
