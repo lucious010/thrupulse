@@ -238,11 +238,7 @@ function Home({ setSection }) {
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "80px 48px 0", position: "relative", overflow: "hidden" }}>
 
         <div style={{ maxWidth: "1100px", margin: "0 auto", position: "relative", zIndex: 1, width: "100%", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-          {/* Eyebrow */}
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", border: "1px solid #c8d0da", borderRadius: "12px", padding: "6px 14px", marginBottom: "40px" }}>
-            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#C0392B" }} />
-            <span style={{ fontFamily: "DM Sans", fontSize: "11px", color: "#7a8a9a", letterSpacing: "0.1em" }}>Testnet Live · Unto Labs · $14.4M Raised</span>
-          </div>
+
 
           {/* Big headline */}
           <h1 style={{ fontFamily: "DM Sans", fontWeight: "normal", fontSize: "clamp(56px, 9vw, 120px)", lineHeight: "0.95", color: "#1a1a1a", letterSpacing: "-0.04em", margin: "0 0 32px", minHeight: "2.1em" }}>
